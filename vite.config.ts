@@ -1,7 +1,12 @@
 import { defineApplicationConfig } from '@vben/vite-config';
-
+import { codeInspectorPlugin } from 'code-inspector-plugin';
 export default defineApplicationConfig({
   overrides: {
+    plugins: [
+      codeInspectorPlugin({
+        bundler: 'vite',
+      }),
+    ],
     optimizeDeps: {
       include: [
         'echarts/core',

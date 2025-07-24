@@ -134,6 +134,7 @@
     "@vben/vite-config": "workspace:*",
     "@vue/compiler-sfc": "^3.4.25",
     "@vue/test-utils": "^2.4.5",
+    "code-inspector-plugin": "^0.20.17",
     "conventional-changelog-cli": "^4.1.0",
     "cross-env": "^7.0.3",
     "cz-git": "^1.9.1",

@@ -33,6 +33,7 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
+   <AppDarkModeToggle class="enter-x mr-2"  />
       <UpgradePrompt class="mr-2" />
 
       <AppSearch v-if="getShowSearch" :class="`${prefixCls}-action__item `" />
@@ -59,8 +60,7 @@
 <script lang="ts" setup>
   import { Layout } from 'ant-design-vue';
   import { computed, unref } from 'vue';
-
-  import { AppLocalePicker, AppLogo, AppSearch } from '@/components/Application';
+  import { AppLocalePicker, AppLogo, AppSearch,AppDarkModeToggle } from '@/components/Application';
   import { SettingButtonPositionEnum } from '@/enums/appEnum';
   import { MenuModeEnum, MenuSplitTyeEnum } from '@/enums/menuEnum';
   import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
