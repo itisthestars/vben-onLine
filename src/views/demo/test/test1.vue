@@ -55,9 +55,9 @@
         <Switch v-model:checked="disabled" size="small" />
       </div>
       <div>
-        <Row>
-          <Col :span="5">
-            <Card hoverable style="width: 300px">
+        <Row justify="start" :gutter="{ xs: 5, sm: 16, md: 24, lg: 32 }">
+          <Col :span="6">
+            <Card hoverable style="width: 100%">
               <template #cover>
                 <img
                   alt="example"
@@ -75,7 +75,7 @@
                 </template>
               </CardMeta> </Card
           ></Col>
-          <Col :span="13">
+          <Col :span="12">
             <Table
               @change="handleTableChange"
               :pagination="paginationConfig"
@@ -86,7 +86,7 @@
                 <template v-if="column.key === 'name'">
                   <span>
                     <smile-outlined />
-                    Name
+                    姓名
                   </span>
                 </template>
               </template>
@@ -98,12 +98,105 @@
                 </template>
                 <template v-if="column.key === 'action'">
                   <Space>
-                    <Button type="primary" size="small">编辑</Button>
-                    <Button type="primary" size="small" @click="del(record.key)">删除</Button></Space
+                    <Button type="primary" size="small" @click="edit(record.key, record)"
+                      >编辑</Button
+                    >
+                    <Button type="primary" size="small" @click="del(record.key)"
+                      >删除</Button
+                    ></Space
                   >
                 </template>
               </template>
             </Table>
+          </Col>
+        </Row>
+        <Modal @ok="handldOk" v-model:open="isOpenEdit">
+          <template #title>
+            <span style="display: inline-block; width: 400px; cursor: move" ref="modalTitleRef"
+              >用户信息修改<Icon icon="line-md:edit-twotone" size="16"></Icon>
+              <Icon icon="si:move-duotone" size="16"></Icon
+            ></span>
+          </template>
+          <template #closeIcon>
+            <Icon icon="logos:close" size="32"></Icon>
+          </template>
+          <template #cancelText>
+            <span>放弃编辑<Icon icon="noto-v1:face-without-mouth" size="16"></Icon></span>
+          </template>
+          <template #modalRender="{ originVNode }">
+            <div :style="transformStyle">
+              <component :is="originVNode" />
+            </div>
+          </template>
+          <div>{{ edititem }}</div>
+          <Input v-model:value="edititem.name" placeholder="Basic usage">
+            <template #prefix>
+              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+            </template>
+            <template #suffix>
+              <Tooltip title="请修改信息">
+                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+              </Tooltip>
+            </template>
+            <template #addonBefore
+              ><div style="padding: 0px 5px 0px 5px">Name<user-outlined /></div>
+            </template>
+            <template #addonAfter
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
+            ></template>
+          </Input>
+
+          <Input
+            v-model:value="edititem.age"
+            placeholder="Basic usage"
+            :class="{ 'age-over-18': isOver18, 'age-under-18': !isOver18 }"
+          >
+            <template #prefix>
+              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+            </template>
+            <template #suffix>
+              <Tooltip title="请修改信息">
+                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+              </Tooltip>
+            </template>
+            <template #addonBefore
+              ><div style="padding: 0px 5px 0px 5px"
+                >Age <Icon icon="openmoji:mage" size="25"></Icon
+              ></div>
+            </template>
+            <template #addonAfter
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
+            ></template>
+          </Input>
+          <Input style="margin-top: 5px" v-model:value="edititem.address" placeholder="Basic usage">
+            <template #prefix>
+              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+            </template>
+            <template #suffix>
+              <Tooltip title="请修改信息">
+                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+              </Tooltip>
+            </template>
+            <template #addonBefore
+              ><div style="padding: 0px 5px 0px 5px"
+                >Address <Icon icon="entypo:address" size="25"></Icon
+              ></div>
+            </template>
+            <template #addonAfter
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
+            ></template>
+          </Input>
+          <br />
+          <br />
+        </Modal>
+      </div>
+      <div>
+        <Row :gutter="10">
+          <Col class="gutter-row" :span="6">
+            <div class="gutter-box">col-6</div>
+          </Col>
+          <Col class="gutter-row" :span="12">
+            <div class="gutter-box">col-6</div>
           </Col>
         </Row>
       </div>
@@ -133,6 +226,9 @@
     Col,
     Button,
     Space,
+    Modal,
+    Input,
+    Tooltip,
   } from 'ant-design-vue';
   import {
     SettingOutlined,
@@ -143,15 +239,66 @@
     SmileOutlined,
     SyncOutlined,
     LoadingOutlined,
+    UserOutlined,
+    InfoCircleOutlined,
   } from '@ant-design/icons-vue';
-
   import Icon from '@/components/Icon/Icon.vue';
-
-  import { ref, computed } from 'vue';
+  import { useDraggable } from '@vueuse/core';
+  import { ref, computed, watch, watchEffect } from 'vue';
 
   const value1 = ref<number>(0);
   const value2 = ref<[number, number]>([20, 50]);
   const disabled = ref<boolean>(false);
+  const isOpenEdit = ref<boolean>(false);
+
+  // 拖动弹窗
+  const modalTitleRef = ref<any>(null);
+  const { x, y, isDragging } = useDraggable(modalTitleRef);
+  const startX = ref<number>(0);
+  const startY = ref<number>(0);
+  const startedDrag = ref(false);
+  const transformX = ref(0);
+  const transformY = ref(0);
+  const preTransformX = ref(0);
+  const preTransformY = ref(0);
+  const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
+  watch([x, y], () => {
+    if (!startedDrag.value) {
+      startX.value = x.value;
+      startY.value = y.value;
+      const bodyRect = document.body.getBoundingClientRect();
+      const titleRect = modalTitleRef.value.getBoundingClientRect();
+      dragRect.value.right = bodyRect.width - titleRect.width;
+      dragRect.value.bottom = bodyRect.height - titleRect.height;
+      preTransformX.value = transformX.value;
+      preTransformY.value = transformY.value;
+    }
+    startedDrag.value = true;
+  });
+  watch(isDragging, () => {
+    if (!isDragging) {
+      startedDrag.value = false;
+    }
+  });
+
+  watchEffect(() => {
+    if (startedDrag.value) {
+      transformX.value =
+        preTransformX.value +
+        Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
+        startX.value;
+      transformY.value =
+        preTransformY.value +
+        Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) -
+        startY.value;
+    }
+  });
+  const transformStyle = computed(() => {
+    return {
+      transform: `translate(${transformX.value}px, ${transformY.value}px)`,
+    };
+  });
+
   const dataSource = ref([
     {
       key: '1',
@@ -280,6 +427,7 @@
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
+      width: 100,
     },
     {
       title: '年龄',
@@ -327,15 +475,86 @@
     console.log(key);
     dataSource.value = dataSource.value.filter((item) => item.key !== key);
   };
+  let edititem = ref<any>({
+    key: '13',
+    name: '王大力',
+    age: 38,
+    address: '西湖区湖景园3号楼',
+  });
+  const edit = (key: string, item) => {
+    console.log('编辑', key, item);
+    // 避免内存引用问题 使用对象展开运算符进行浅拷贝
+    edititem.value = { ...dataSource.value.find((item) => item.key === key) };
+    // console.log(edititem.value);
+    isOpenEdit.value = true;
+  };
+  const handldOk = () => {
+    console.log('点击了确定按钮');
+    // 这里可以添加保存逻辑
+    // 比如更新dataSource中的对应数据
+    const index = dataSource.value.findIndex((item) => item.key === edititem.value.key);
+    if (index !== -1) {
+      dataSource.value[index] = { ...edititem.value }; // 更新数据
+    }
+    isOpenEdit.value = false; // 关闭弹窗
+  };
+  // 计算属性：判断是否大于18岁
+  const isOver18 = computed(() => {
+    const age = Number(edititem.value.age);
+    return !isNaN(age) && age > 18;
+  });
+  watch(
+    () => edititem, // 监听整个edititem对象
+    (newVal) => {
+      console.log('edititem任意属性变化了', newVal);
+    },
+    {
+      deep: true,
+      immediate: true, // 立即执行一次回调函数
+    }, // 必须加deep: true，否则无法监听对象内部属性变化
+  );
+  // watchEffect(() => {
+  //   // 关键：访问 edititem.value（ref的内部值）
+  //   console.log('edititem任意属性变化了', edititem.value.name);
+  // });
+  // const ageInputStyle = computed(() => {
+  //     return {
+  //       marginTop: '5px',
+  //       color: edititem.value.age > 10 ? 'green' : 'red',
+  //     };
+  //   });
+  // const ageInputStyle = ref({ marginTop: '5px', color: 'black' });
+  // watch(edititem, (newVal) => {
+  //   ageInputStyle.value.color = newVal.age > 10 ? 'green' : 'red';
+  // });
 </script>
 
 <style scoped lang="less">
-:deep(.ant-table-thead > tr > th) {
-  background-color: #1890ff !important; /* Ant Design 蓝色主题色 */
-  color: white !important; /* 文字颜色改为白色，与蓝色背景对比 */
-}
+@bg1:rgb(87, 233, 194);
+  :deep(.ant-table-thead > tr > th) {
+    background-color: #1890ff !important; /* Ant Design 蓝色主题色 */
+    color: white !important; /* 文字颜色改为白色，与蓝色背景对比 */
+  }
 
-/* 可选：修改表头hover状态的样式 */
-:deep(.ant-table-thead > tr > th:hover) {
-  background-color: #096dd9 !important; /* 稍深的蓝色 */
-}</style>
+  /* 可选：修改表头hover状态的样式 */
+  :deep(.ant-table-thead > tr > th:hover) {
+    background-color: #096dd9 !important; /* 稍深的蓝色 */
+  }
+  .gutter-box {
+    height: 32px;
+    width: 100%;
+    background-color: pink;
+  }
+  :deep(.ant-input) {
+    // color: pink;
+  }
+  /* 大于18岁的样式 - 使用deep穿透到内部input元素 */
+  :deep(.age-over-18 .ant-input) {
+    color:@bg1 !important;
+  }
+
+  /* 小于等于18岁的样式 */
+  :deep(.age-under-18 .ant-input) {
+    color: red !important;
+  }
+</style>
