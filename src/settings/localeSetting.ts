@@ -4,6 +4,7 @@ import type { LocaleSetting, LocaleType } from '#/config';
 export const LOCALE: { [key: string]: LocaleType } = {
   ZH_CN: 'zh_CN',
   EN_US: 'en',
+  JA_JP: 'ja',
 };
 
 export const localeSetting: LocaleSetting = {
@@ -13,7 +14,7 @@ export const localeSetting: LocaleSetting = {
   // Default locale
   fallback: LOCALE.ZH_CN,
   // available Locales
-  availableLocales: [LOCALE.ZH_CN, LOCALE.EN_US],
+  availableLocales: [LOCALE.ZH_CN, LOCALE.EN_US, LOCALE.JA_JP],
 };
 
 // locale list
@@ -26,4 +27,8 @@ export const localeList: DropMenu[] = [
     text: 'English',
     event: LOCALE.EN_US,
   },
+  {
+    text: '日本語',
+    event: LOCALE.JA_JP,
+  }
 ];

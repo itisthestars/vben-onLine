@@ -131,15 +131,15 @@
           <div>{{ edititem }}</div>
           <Input v-model:value="edititem.name" placeholder="Basic usage">
             <template #prefix>
-              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+              <div style="padding: 0 5px; border-right: 1px solid black"></div>
             </template>
             <template #suffix>
               <Tooltip title="请修改信息">
-                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+                <info-circle-outlined style="color: rgb(0 0 0 / 45%)" />
               </Tooltip>
             </template>
             <template #addonBefore
-              ><div style="padding: 0px 5px 0px 5px">Name<user-outlined /></div>
+              ><div style="padding: 0 5px">Name<user-outlined /></div>
             </template>
             <template #addonAfter
               ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
@@ -152,15 +152,15 @@
             :class="{ 'age-over-18': isOver18, 'age-under-18': !isOver18 }"
           >
             <template #prefix>
-              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+              <div style="padding: 0 5px; border-right: 1px solid black"></div>
             </template>
             <template #suffix>
               <Tooltip title="请修改信息">
-                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
-              </Tooltip>
+                <info-circle-outlined style="color: rgb(0 0 0 / 45%)" />
+              </Tooltip>  
             </template>
             <template #addonBefore
-              ><div style="padding: 0px 5px 0px 5px"
+              ><div style="padding: 0 5px"
                 >Age <Icon icon="openmoji:mage" size="25"></Icon
               ></div>
             </template>
@@ -170,15 +170,15 @@
           </Input>
           <Input style="margin-top: 5px" v-model:value="edititem.address" placeholder="Basic usage">
             <template #prefix>
-              <div style="padding: 0px 5px 0px 5px; border-right: 1px solid black"></div>
+              <div style="padding: 0 5px; border-right: 1px solid black"></div>
             </template>
             <template #suffix>
               <Tooltip title="请修改信息">
-                <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+                <info-circle-outlined style="color: rgb(0 0 0 / 45%)" />
               </Tooltip>
             </template>
             <template #addonBefore
-              ><div style="padding: 0px 5px 0px 5px"
+              ><div style="padding: 0 5px"
                 >Address <Icon icon="entypo:address" size="25"></Icon
               ></div>
             </template>
@@ -193,7 +193,7 @@
       <div>
         <Row :gutter="10">
           <Col class="gutter-row" :span="6">
-            <div class="gutter-box">col-6</div>
+           <Button  type="primary" danger @click="useGoPath()">Usego 跳转</Button>
           </Col>
           <Col class="gutter-row" :span="12">
             <div class="gutter-box">col-6</div>
@@ -245,11 +245,12 @@
   import Icon from '@/components/Icon/Icon.vue';
   import { useDraggable } from '@vueuse/core';
   import { ref, computed, watch, watchEffect } from 'vue';
-
+import { GoType, useGo } from '@/hooks/web/usePage';
   const value1 = ref<number>(0);
   const value2 = ref<[number, number]>([20, 50]);
   const disabled = ref<boolean>(false);
   const isOpenEdit = ref<boolean>(false);
+  const go = useGo();
 
   // 拖动弹窗
   const modalTitleRef = ref<any>(null);
@@ -467,8 +468,8 @@
     // 更新分页配置（current页码 或 pageSize每页条数）
     paginationConfig.value = {
       ...paginationConfig.value,
-      current: pagination.current, // 新页码
-      pageSize: pagination.pageSize, // 新每页条数
+      current: pagination.current, // 新页码;currentcurrentcurrentcurrent
+      pageSize: pagination.pageSize, // 新每页条数pageSizepageSizepageSize
     };
   };
   const del = (key: string) => {
@@ -527,10 +528,15 @@
   // watch(edititem, (newVal) => {
   //   ageInputStyle.value.color = newVal.age > 10 ? 'green' : 'red';
   // });
+  const useGoPath = () => {
+    // go();
+    go('/dashboard/workbench?data1=1',GoType.after);
+  };
 </script>
 
 <style scoped lang="less">
 @bg1:rgb(87, 233, 194);
+
   :deep(.ant-table-thead > tr > th) {
     background-color: #1890ff !important; /* Ant Design 蓝色主题色 */
     color: white !important; /* 文字颜色改为白色，与蓝色背景对比 */
@@ -540,14 +546,17 @@
   :deep(.ant-table-thead > tr > th:hover) {
     background-color: #096dd9 !important; /* 稍深的蓝色 */
   }
+
   .gutter-box {
-    height: 32px;
     width: 100%;
+    height: 32px;
     background-color: pink;
   }
+
   :deep(.ant-input) {
-    // color: pink;
+    // color: pink;colorcolorcolorcolorcolor
   }
+
   /* 大于18岁的样式 - 使用deep穿透到内部input元素 */
   :deep(.age-over-18 .ant-input) {
     color:@bg1 !important;
