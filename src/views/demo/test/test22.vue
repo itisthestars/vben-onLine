@@ -1,6 +1,6 @@
 <template>
   <McLayout class="container">
-    <McHeader :title="'MateChat'" :logoImg="'https://matechat.gitcode.com/logo.svg'">
+    <McHeader :title="'是星星'" :logoImg="'https://www.tuoren.com/assets/cailogo-CWkhaTdk.png'">
       <template #operationArea>
         <div class="operations">
           <i class="icon-helping"></i>
@@ -221,6 +221,7 @@ const onSubmit = (evt) => {
 </script>
 
 <style lang="scss" scoped>
+
   .container {
     width: 1000px;
     height: calc(100vh - 82px);
@@ -280,5 +281,10 @@ const onSubmit = (evt) => {
         margin-left: 8px;
       }
     }
+  }
+
+    :deep(.mc-header-logo){
+width: 80px;
+height: 30px;
   }
 </style>
