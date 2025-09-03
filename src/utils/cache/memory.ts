@@ -84,6 +84,7 @@ export class Memory<T = any, V = any> {
   }
 
   resetCache(cache: { [K in keyof T]: Cache }) {
+    console.log('传来的cache', cache);
     Object.keys(cache).forEach((key) => {
       const k = key as any as keyof T;
       const item = cache[k];

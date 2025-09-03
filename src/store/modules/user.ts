@@ -44,6 +44,8 @@ export const useUserStore = defineStore({
       return state.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
     getToken(state): string {
+      console.log('state.token', state.token);
+      console.log('getAuthCache', getAuthCache<string>(TOKEN_KEY));
       return state.token || getAuthCache<string>(TOKEN_KEY);
     },
     getRoleList(state): RoleEnum[] {
@@ -59,6 +61,7 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info ? info : ''; // for null or undefined value
+      // console.log(TOKEN_KEY);
       setAuthCache(TOKEN_KEY, info);
     },
     setRoleList(roleList: RoleEnum[]) {
@@ -101,6 +104,7 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+      console.log('调用afterLoginAction');
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
@@ -110,11 +114,14 @@ export const useUserStore = defineStore({
         this.setSessionTimeout(false);
       } else {
         const permissionStore = usePermissionStore();
-
+        console.log('permissionStore', permissionStore.isDynamicAddedRoute);
         // 动态路由加载（首次）
         if (!permissionStore.isDynamicAddedRoute) {
+          console.log('动态路由加载');
           const routes = await permissionStore.buildRoutesAction();
+          console.log('动态路由', [...routes, PAGE_NOT_FOUND_ROUTE]);
           [...routes, PAGE_NOT_FOUND_ROUTE].forEach((route) => {
+            // console.log('route', route);
             router.addRoute(route as unknown as RouteRecordRaw);
           });
           // 记录动态路由加载完成
@@ -126,6 +133,9 @@ export const useUserStore = defineStore({
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
+      console.log('调用getUserInfoAction');
+      const permissionStore = usePermissionStore();
+      console.log('permissionStore', permissionStore.isDynamicAddedRoute);
       if (!this.getToken) return null;
       const userInfo = await getUserInfo();
       const { roles = [] } = userInfo;

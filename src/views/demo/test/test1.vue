@@ -90,7 +90,7 @@
                   </span>
                 </template>
               </template>
-              <template #bodyCell="{ record, column }">
+              <template #bodyCell="{ text, record, index, column }">
                 <template v-if="column.key === 'age'">
                   <span :style="{ color: record.age > 10 ? 'green' : 'red' }">
                     {{ record.age }}
@@ -100,6 +100,9 @@
                   <Space>
                     <Button type="primary" size="small" @click="edit(record.key, record)"
                       >编辑</Button
+                    >
+                      <Button type="primary" size="small" @click="console.log(text, index, column, record)"
+                      >打印</Button
                     >
                     <Button type="primary" size="small" @click="del(record.key)"
                       >删除</Button
@@ -468,8 +471,8 @@ import { GoType, useGo } from '@/hooks/web/usePage';
     // 更新分页配置（current页码 或 pageSize每页条数）
     paginationConfig.value = {
       ...paginationConfig.value,
-      current: pagination.current, // 新页码;currentcurrentcurrentcurrent
-      pageSize: pagination.pageSize, // 新每页条数pageSizepageSizepageSize
+      current: pagination.current, // 新页码;currentcurrentcurrentcurrentcurrent
+      pageSize: pagination.pageSize, // 新每页条数pageSizepageSizepageSizepageSize
     };
   };
   const del = (key: string) => {
@@ -554,7 +557,7 @@ import { GoType, useGo } from '@/hooks/web/usePage';
   }
 
   :deep(.ant-input) {
-    // color: pink;colorcolorcolorcolorcolor
+    // color: pink;colorcolorcolorcolorcolorcolor
   }
 
   /* 大于18岁的样式 - 使用deep穿透到内部input元素 */
