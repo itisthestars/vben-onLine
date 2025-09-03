@@ -65,7 +65,7 @@
     getIsMixMode,
     getTrigger,
   } = useMenuSetting();
-
+console.log('是否分割',unref(getSplit));
   const { prefixCls } = useDesign('layout-sideBar');
 
   const { getIsMobile } = useAppInject();
