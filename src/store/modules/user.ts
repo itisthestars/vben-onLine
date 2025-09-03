@@ -44,6 +44,8 @@ export const useUserStore = defineStore({
       return state.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
     getToken(state): string {
+      console.log('token', state.token);
+      console.log('缓存token', getAuthCache<string>(TOKEN_KEY));
       return state.token || getAuthCache<string>(TOKEN_KEY);
     },
     getRoleList(state): RoleEnum[] {
@@ -68,6 +70,7 @@ export const useUserStore = defineStore({
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
       this.lastUpdateTime = new Date().getTime();
+      console.log('调用');
       setAuthCache(USER_INFO_KEY, info);
     },
     setSessionTimeout(flag: boolean) {
@@ -81,6 +84,15 @@ export const useUserStore = defineStore({
     },
     /**
      * @description: login
+     */
+    /**
+     * 登录函数
+     *
+     * @param params 登录参数，包含登录参数和可选参数
+     * @param params.goHome 登录后是否跳转到首页，默认为 true
+     * @param params.mode 错误信息模式，默认为 undefined
+     * @returns 登录成功返回用户信息模型，登录失败返回 null
+     * @throws 抛出登录过程中发生的错误
      */
     async login(
       params: LoginParams & {
@@ -126,6 +138,7 @@ export const useUserStore = defineStore({
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
+      console.log('获取用户信息');
       if (!this.getToken) return null;
       const userInfo = await getUserInfo();
       const { roles = [] } = userInfo;
