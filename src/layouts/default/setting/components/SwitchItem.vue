@@ -44,6 +44,7 @@
   });
 
   const handleChange: SwitchProps['onChange'] = (val) => {
+    console.log(props.event,val);
     props.event && baseHandler(props.event, val);
   };
 </script>

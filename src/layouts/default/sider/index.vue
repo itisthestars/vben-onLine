@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import {  unref } from 'vue';
   import Sider from './LayoutSider.vue';
   import MixSider from './MixSider.vue';
   import { Drawer } from 'ant-design-vue';
@@ -28,7 +29,7 @@
   const { prefixCls } = useDesign('layout-sider-wrapper');
   const { getIsMobile } = useAppInject();
   const { setMenuSetting, getCollapsed, getMenuWidth, getIsMixSidebar } = useMenuSetting();
-
+  console.log('getIsMixSidebar',unref(getIsMixSidebar));
   function handleClose() {
     setMenuSetting({
       collapsed: true,

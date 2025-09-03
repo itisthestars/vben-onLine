@@ -21,8 +21,8 @@ export function baseHandler(event: HandlerEnum, value: any) {
 }
 
 export function handler(event: HandlerEnum, value: any): DeepPartial<ProjectConfig> {
+  // console.log('handler', event, value); 
   const appStore = useAppStore();
-
   const { getThemeColor, getDarkMode } = useRootSetting();
   const { menuSetting } = projectSetting;
   switch (event) {

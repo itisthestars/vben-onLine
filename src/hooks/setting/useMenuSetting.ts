@@ -15,6 +15,7 @@ export function useMenuSetting() {
   const appStore = useAppStore();
 
   const getShowSidebar = computed(() => {
+    console.log('getSplit: ',unref(getSplit))
     return (
       unref(getSplit) ||
       (unref(getShowMenu) && unref(getMenuMode) !== MenuModeEnum.HORIZONTAL && !unref(fullContent))

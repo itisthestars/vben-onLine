@@ -88,6 +88,8 @@ export const useAppStore = defineStore({
     },
 
     setProjectConfig(config: DeepPartial<ProjectConfig>): void {
+      console.log('修改的ProjectConfig', config);
+      console.log('setProjectConfig', this.projectConfig);
       this.projectConfig = deepMerge(this.projectConfig || {}, config) as ProjectConfig;
       Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig);
     },

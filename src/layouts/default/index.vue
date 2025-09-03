@@ -3,6 +3,7 @@
     <LayoutFeatures />
     <LayoutHeader fixed v-if="getShowFullHeaderRef" />
     <Layout :class="[layoutClass, `${prefixCls}-out`]">
+      <!-- 传入getShowSidebar和getIsMobile to control the display of the sidebar -->
       <LayoutSideBar v-if="getShowSidebar || getIsMobile" />
       <Layout :class="`${prefixCls}-main`">
         <LayoutMultipleHeader />
@@ -42,7 +43,7 @@
   const { getShowFullHeaderRef } = useHeaderSetting();
   const { getShowSidebar, getIsMixSidebar, getShowMenu } = useMenuSetting();
   const { getAutoCollapse } = useMultipleTabSetting();
-
+console.log('getShowSidebar', unref(getShowSidebar),'getIsMobile', getIsMobile.value);
   // Create a lock screen monitor
   const lockEvents = useLockPage();
 
