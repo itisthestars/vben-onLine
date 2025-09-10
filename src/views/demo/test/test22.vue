@@ -1,6 +1,6 @@
 <template>
   <McLayout class="container">
-    <McHeader :title="'是星星'" :logoImg="'https://www.tuoren.com/assets/cailogo-CWkhaTdk.png'">
+    <McHeader :title="'TUORen'" :logoImg="'src/assets/images/tuoren-logo.png'"  :logoClickable="true" @logoClicked="onLogoClicked">
       <template #operationArea>
         <div class="operations">
           <i class="icon-helping"></i>
@@ -18,14 +18,20 @@
       "
     >
       <McIntroduction
-        :logoImg="'https://matechat.gitcode.com/logo2x.svg'"
-        :title="'MateChat'"
-        :subTitle="'Hi，欢迎使用 MateChat'"
+        :logoImg="'src/assets/images/tuoren-icon.png'"
+        :title="'TR'"
+        :subTitle="'欢迎'"
         :description="description"
       ></McIntroduction>
       <McPrompt
-        :list="introPrompt.list"
-        :direction="introPrompt.direction"
+        :list="promptData"
+        direction="horizontal"
+        class="intro-prompt"
+        @itemClick="onSubmit($event.label)"
+      ></McPrompt>
+         <McPrompt
+        :list="promptData1"
+        direction="horizontal"
         class="intro-prompt"
         @itemClick="onSubmit($event.label)"
       ></McPrompt>
@@ -103,32 +109,44 @@
   import 'vue-devui/button/style.css';
 import OpenAI from 'openai';
   const description = [
-    'MateChat 可以辅助研发人员编码、查询知识和相关作业信息、编写文档等。',
-    '作为AI模型，MateChat 提供的答案可能不总是确定或准确的，但您的反馈可以帮助 MateChat 做的更好。',
+
+    '如果您有任何问题，请随时向我提问。',
+
   ];
-  const introPrompt = {
-  direction: 'horizontal',
-  list: [
+const promptData = [
+  {
+    value: 'quickSort',
+    label: '驼人集团在哪里？',
+    iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
+    // desc: '使用 js 实现一个快速排序',
+  },
+  {
+    value: 'helpMd',
+    label: '你可以帮我做些什么？',
+    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+    // desc: '了解当前大模型可以帮你做的事',
+  },
+];
+const promptData1 = [
+  {
+    value: 'quickSort',
+    label: '医疗器械都有哪些？',
+    iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
+    // desc: '使用 js 实现一个快速排序',
+  },
+  {
+    value: 'helpMd',
+    label: '医疗器械注册流程是怎样的？',
+    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+    // desc: '了解当前大模型可以帮你做的事',
+  },
     {
-      value: 'quickSort',
-      label: '帮我写一个快速排序',
-      iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
-      desc: '使用 js 实现一个快速排序',
-    },
-    {
-      value: 'helpMd',
-      label: '你可以帮我做些什么？',
-      iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
-      desc: '了解当前大模型可以帮你做的事',
-    },
-    {
-      value: 'bindProjectSpace',
-      label: '怎么绑定项目空间',
-      iconConfig: { name: 'icon-priority', color: '#3ac295' },
-      desc: '如何绑定云空间中的项目',
-    },
-  ],
-};
+    value: 'helpMd',
+    label: '中国医疗耗材之都是哪里？',
+    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+    // desc: '了解当前大模型可以帮你做的事',
+  },
+];
   const simplePrompt = [
     {
       value: 'quickSort',
@@ -181,7 +199,9 @@ console.log('OpenAI client is initialized.',client.value);
     stream: true, // 为 true 则开启接口的流式返回
   });
   messages.value[messages.value.length - 1].loading = false;
+  console.log('completion', completion);
   for await (const chunk of completion) {
+    console.log(chunk);
     const content = chunk.choices[0]?.delta?.content || '';
     const chatId = chunk.id;
     messages.value[messages.value.length - 1].content += content;
@@ -218,6 +238,9 @@ const onSubmit = (evt) => {
   //     });
   //   }, 200);
   // };
+  const onLogoClicked = () => {
+    window.open('https://www.tuoren.com', '_blank');
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -231,7 +254,16 @@ const onSubmit = (evt) => {
     border-radius: 16px;
     background: #fff;
     gap: 8px;
+  } 
+  
+  :deep(.mc-introduction-logo-container img) {
+    width: 30px;
+    height: 30px;
   }
+
+
+    
+
 
   .content-container {
     display: flex;

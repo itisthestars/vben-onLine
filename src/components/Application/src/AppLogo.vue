@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
-    <img src="../../../assets/images/logo.png" />
+    <img class="logo-image" src="../../../assets/images/logo.png" />
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
       {{ title }}
     </div>
@@ -60,6 +60,10 @@
 <style lang="less" scoped>
   @prefix-cls: ~'@{namespace}-app-logo';
 
+.logo-image{
+    width: 32px;
+    height: 32px;
+}
   .@{prefix-cls} {
     display: flex;
     align-items: center;

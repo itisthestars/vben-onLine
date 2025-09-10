@@ -19,12 +19,14 @@ export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut();
   const permissionStore = usePermissionStoreWithOut();
   router.beforeEach(async (to, from, next) => {
+     console.log('topath', to.path);
     if (
       from.path === ROOT_PATH &&
       to.path === PageEnum.BASE_HOME &&
       userStore.getUserInfo.homePath &&
       userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
     ) {
+      console.log('homePath', userStore.getUserInfo.homePath);
       next(userStore.getUserInfo.homePath);
       return;
     }
@@ -97,6 +99,7 @@ export function createPermissionGuard(router: Router) {
     }
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
+      console.log('to.name', to.name);
       // 遇到不存在页面，后续逻辑不再处理redirect（阻止下面else逻辑）
       from.query.redirect = '';
 
@@ -111,6 +114,7 @@ export function createPermissionGuard(router: Router) {
         next();
       }
     } else if (from.query.redirect) {
+      console.log('from.query.redirect', from.query.redirect);
       // 存在redirect
       const redirect = decodeURIComponent((from.query.redirect as string) || '');
 

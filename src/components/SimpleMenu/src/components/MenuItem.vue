@@ -58,6 +58,7 @@
   });
 
   const getCollapse = computed(() => unref(getParentRootMenu)?.props.collapse);
+  console.log('菜单折叠状态',unref(getCollapse));
 
   const showTooltip = computed(() => {
     return unref(getParentMenu)?.type.name === 'Menu' && unref(getCollapse) && slots.title;

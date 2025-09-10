@@ -65,7 +65,8 @@
     getIsMixMode,
     getTrigger,
   } = useMenuSetting();
-console.log('是否分割',unref(getSplit));
+console.log('是否分割',unref(getSplit),'menu主题',unref(getMenuTheme),'是否隐藏',unref(getMenuHidden),'是否折叠',unref(getCollapsed),'菜单宽度',unref(getMenuWidth),);
+
   const { prefixCls } = useDesign('layout-sideBar');
 
   const { getIsMobile } = useAppInject();
@@ -87,7 +88,7 @@ console.log('是否分割',unref(getSplit));
   const showClassSideBarRef = computed(() => {
     return unref(getSplit) ? !unref(getMenuHidden) : true;
   });
-
+console.log('是否显示侧边栏',unref(showClassSideBarRef));
   const getSiderClass = computed(() => {
     return [
       prefixCls,

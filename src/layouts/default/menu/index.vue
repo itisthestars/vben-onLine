@@ -38,7 +38,7 @@
       },
 
       // 是否为水平菜单布局
-      isHorizontal: propTypes.bool.def(false),
+      isHorizontal: propTypes.bool,
 
       // 菜单模式：纵向/横向等
       menuMode: {
@@ -199,7 +199,7 @@
        * @returns 菜单组件或null（无菜单数据时）
        */
       function renderMenu() {
-        console.log('getComputedMenuMode',getComputedMenuMode.value)
+        console.log('公共配置',getComputedMenuMode.value)
         console.log('isHorizontal',props.isHorizontal)
         const { menus, ...menuProps } = unref(getCommonProps);
         console.log('菜单配置', menus); // 调试用：打印菜单数据
@@ -208,6 +208,11 @@
         if (!menus || !menus.length) return null;
 
         // 非水平布局使用SimpleMenu，水平布局使用BasicMenu
+        if(!props.isHorizontal){
+          console.log('渲染SimpleMenu');
+        }else{
+          console.log('渲染BasicMenu');
+        }
         return !props.isHorizontal ? (
           <SimpleMenu {...menuProps} isSplitMenu={unref(getSplit)} items={menus} />
         ) : (
@@ -252,12 +257,12 @@
     // Logo区域样式
     &-logo {
       height: @header-height; // 使用全局头部高度变量
-      padding: 10px 4px 10px 10px; // 内边距
+      padding: 10px 4px 10px 10px;padding // 内边距
 
       // Logo图片样式
       img {
         width: @logo-width; // 使用全局Logo宽度变量
-        height: @logo-width; // 宽高相等（正方形）
+        height: @logo-width;// 宽高相等（正方形）
       }
     }
 

@@ -36,7 +36,7 @@ const setting: ProjectConfig = {
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum.ROUTE_JUMP,
 
   // color
-  themeColor: APP_PRESET_COLOR_LIST[0],
+  themeColor: APP_PRESET_COLOR_LIST[2],
 
   // Website gray mode, open for possible mourning dates
   grayMode: false,
@@ -54,7 +54,7 @@ const setting: ProjectConfig = {
   showLogo: true,
 
   // Whether to show footer
-  showFooter: false,
+  showFooter: true,
 
   // Header configuration
   headerSetting: {
@@ -65,7 +65,7 @@ const setting: ProjectConfig = {
     // Whether to show top
     show: true,
     // theme
-    theme: ThemeEnum.LIGHT,
+    theme: ThemeEnum.DARK,
     // Whether to enable the lock screen function
     useLockPage: true,
     // Whether to show the full screen button
@@ -90,7 +90,7 @@ const setting: ProjectConfig = {
     // When sider hide because of the responsive layout
     siderHidden: false,
     // Whether to display the menu name when folding the menu
-    collapsedShowTitle: false,
+    collapsedShowTitle: true,
     // Whether it can be dragged
     // Only limited to the opening of the left menu, the mouse has a drag bar on the right side of the menu
     canDrag: false,
@@ -117,7 +117,7 @@ const setting: ProjectConfig = {
     // Switch page to close menu
     closeMixSidebarOnChange: false,
     // Module opening method ‘click’ |'hover'
-    mixSideTrigger: MixSidebarTriggerEnum.CLICK,
+    mixSideTrigger: MixSidebarTriggerEnum.HOVER,
     // Fixed expanded menu
     mixSideFixed: false,
   },
