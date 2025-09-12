@@ -1,152 +1,222 @@
 <template>
-  <McLayout class="container">
-    <McHeader :title="'TUORen'" :logoImg="'src/assets/images/tuoren-logo.png'"  :logoClickable="true" @logoClicked="onLogoClicked">
-      <template #operationArea>
-        <div class="operations">
-          <i class="icon-helping"></i>
+  <Row style="height: 100%; background: pink">
+    <Col :span="3"></Col>
+    <Col style="height: 100%" :span="5"><leftList :currentMsg="messages"></leftList></Col>
+    <Col style="height: 100%; background-color: aqua" :span="16">
+      <McLayout class="container">
+        <McHeader
+          :title="'TUORen'"
+          :logoImg="'src/assets/images/tuoren-logo.png'"
+          :logoClickable="true"
+          @logo-clicked="onLogoClicked"
+        >
+          <template #operationArea>
+            <div class="operations">
+              <i class="icon-helping"></i>
+            </div>
+          </template>
+        </McHeader>
+        <McLayoutContent
+          v-if="startPage"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+          "
+        >
+          <McIntroduction
+            :logoImg="'src/assets/images/tuoren-icon.png'"
+            :title="'TR'"
+            :subTitle="'欢迎'"
+            :description="description"
+          />
+          <McPrompt
+            :list="promptData"
+            direction="horizontal"
+            class="intro-prompt"
+            @item-click="onSubmit($event.label)"
+          />
+          <McPrompt
+            :list="promptData1"
+            direction="horizontal"
+            class="intro-prompt"
+            @item-click="onSubmit($event.label)"
+          />
+        </McLayoutContent>
+        <!-- 对话渲染区域 -->
+        <McLayoutContent ref="talkContent" class="content-container" v-else>
+          <template v-for="(msg, idx) in messages" :key="idx">
+            <McBubble
+              v-if="msg.from === 'user'"
+              :content="msg.content"
+              :align="'right'"
+              :avatarPosition="'top'"
+              :avatarConfig="{
+                imgSrc: 'https://matechat.gitcode.com/png/demo/userAvatar.svg',
+                displayName: 'My',
+              }"
+            />
+            <!-- model回复气泡区域 -->
+            <McBubble
+              v-else
+              :content="msg.content"
+              :avatarConfig="{ imgSrc: 'https://matechat.gitcode.com/logo.svg', displayName: 'TR' }"
+              :loading="msg.loading"
+              :avatarPosition="'top'"
+            >
+              <template #default>
+                <McMarkdownCard :content="msg.content" :theme="theme" />
+              </template>
+              <template #loadingTpl>
+                <div
+                  >我正在思考中<Icon icon="line-md:loading-alt-loop" size="32" color="#00a2ff"
+                /></div>
+              </template>
+            </McBubble>
+          </template>
+        </McLayoutContent>
+        <div class="shortcut" style="display: flex; align-items: center; gap: 8px">
+          <McPrompt
+            v-if="!startPage"
+            :list="simplePrompt"
+            :direction="'horizontal'"
+            style="flex: 1"
+            @item-click="onSubmit($event.label)"
+          />
+          <Button
+            style="margin-left: auto"
+            icon="add"
+            shape="circle"
+            title="新建对话"
+            size="md"
+            @click="newConversation"
+          />
         </div>
-      </template>
-    </McHeader>
-    <McLayoutContent
-      v-if="startPage"
-      style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-      "
+        <McLayoutSender>
+          <McInput
+            :value="inputValue"
+            :maxLength="2000"
+            @change="(e) => (inputValue = e)"
+            @submit="onSubmit"
+          >
+            <template #extra>
+              <div class="input-foot-wrapper">
+                <div class="input-foot-left">
+                  <span v-for="(item, index) in inputFootIcons" :key="index">
+                    <i :class="item.icon"></i>
+                    {{ item.text }}
+                  </span>
+                  <span class="input-foot-dividing-line"></span>
+                  <span class="input-foot-maxlength">{{ inputValue.length }}/2000</span>
+                </div>
+                <div class="input-foot-right">
+                  <Button
+                    icon="op-clearup"
+                    shape="round"
+                    :disabled="!inputValue"
+                    @click="inputValue = ''"
+                    ><span class="demo-button-content">清空输入</span></Button
+                  >
+                </div>
+              </div>
+            </template>
+          </McInput>
+        </McLayoutSender>
+      </McLayout></Col
     >
-      <McIntroduction
-        :logoImg="'src/assets/images/tuoren-icon.png'"
-        :title="'TR'"
-        :subTitle="'欢迎'"
-        :description="description"
-      ></McIntroduction>
-      <McPrompt
-        :list="promptData"
-        direction="horizontal"
-        class="intro-prompt"
-        @itemClick="onSubmit($event.label)"
-      ></McPrompt>
-         <McPrompt
-        :list="promptData1"
-        direction="horizontal"
-        class="intro-prompt"
-        @itemClick="onSubmit($event.label)"
-      ></McPrompt>
-    </McLayoutContent>
-    <McLayoutContent class="content-container" v-else>
-      <template v-for="(msg, idx) in messages" :key="idx">
-        <McBubble
-          v-if="msg.from === 'user'"
-          :content="msg.content"
-          :align="'right'"
-          :avatarConfig="{ imgSrc: 'https://matechat.gitcode.com/png/demo/userAvatar.svg' }"
-        >
-        </McBubble>
-        <McBubble
-          v-else
-          :content="msg.content"
-          :avatarConfig="{ imgSrc: 'https://matechat.gitcode.com/logo.svg' }"
-        >
-        </McBubble>
-      </template>
-    </McLayoutContent>
-    <div class="shortcut" style="display: flex; align-items: center; gap: 8px">
-      <McPrompt
-        v-if="!startPage"
-        :list="simplePrompt"
-        :direction="'horizontal'"
-        style="flex: 1"
-        @itemClick="onSubmit($event.label)"
-      ></McPrompt>
-      <Button
-        style="margin-left: auto"
-        icon="add"
-        shape="circle"
-        title="新建对话"
-        size="md"
-        @click="newConversation"
-      />
-    </div>
-    <McLayoutSender>
-      <McInput
-        :value="inputValue"
-        :maxLength="2000"
-        @change="(e) => (inputValue = e)"
-        @submit="onSubmit"
-      >
-        <template #extra>
-          <div class="input-foot-wrapper">
-            <div class="input-foot-left">
-              <span v-for="(item, index) in inputFootIcons" :key="index">
-                <i :class="item.icon"></i>
-                {{ item.text }}
-              </span>
-              <span class="input-foot-dividing-line"></span>
-              <span class="input-foot-maxlength">{{ inputValue.length }}/2000</span>
-            </div>
-            <div class="input-foot-right">
-              <Button
-                icon="op-clearup"
-                shape="round"
-                :disabled="!inputValue"
-                @click="inputValue = ''"
-                ><span class="demo-button-content">清空输入</span></Button
-              >
-            </div>
-          </div>
-        </template>
-      </McInput>
-    </McLayoutSender>
-  </McLayout>
+  </Row>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { Row, Col, message } from 'ant-design-vue';
+  import Icon from '@/components/Icon/Icon.vue';
+  import leftList from './components/leftList.vue';
+  import { ref, nextTick, ComponentPublicInstance } from 'vue';
   import { Button } from 'vue-devui/button';
   import 'vue-devui/button/style.css';
-import OpenAI from 'openai';
-  const description = [
+  import OpenAI from 'openai';
 
-    '如果您有任何问题，请随时向我提问。',
+  const theme = ref('light');
+  const talkContent = ref<any>(null);
+  const contentTest = ref(`
+# 快速排序（Quick Sort）
 
-  ];
-const promptData = [
-  {
-    value: 'quickSort',
-    label: '驼人集团在哪里？',
-    iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
-    // desc: '使用 js 实现一个快速排序',
-  },
-  {
-    value: 'helpMd',
-    label: '你可以帮我做些什么？',
-    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
-    // desc: '了解当前大模型可以帮你做的事',
-  },
-];
-const promptData1 = [
-  {
-    value: 'quickSort',
-    label: '医疗器械都有哪些？',
-    iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
-    // desc: '使用 js 实现一个快速排序',
-  },
-  {
-    value: 'helpMd',
-    label: '医疗器械注册流程是怎样的？',
-    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
-    // desc: '了解当前大模型可以帮你做的事',
-  },
+### 介绍
+**快速排序（Quick Sort）**：是一种高效的排序算法，它采用分治法（Divide and Conquer）的思想。它的基本思路是：
+
+1. 选择一个基准值（pivot）
+2. 将数组分成两部分：小于基准值的部分和大于等于基准值的部分
+3. 递归地对这两部分进行排序
+
+### 代码实现
+
+1. 以下是快速排序的实现方法
+\`\`\`ts
+function quickSort(arr) {
+  function quickSort(arr) {
+  if (arr.length < 2) {
+    return arr;
+  }
+
+  const pivot = arr[0];
+  const left = [];
+  const right = [];
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+// 使用示例
+const arr = [3, 6, 8, 10, 1, 2, 1];
+console.log(quickSort(arr)); // 输出排序后的数组
+}
+\`\`\`
+`);
+  // const isLoading = ref(true);
+  const description = ['如果您有任何问题，请随时向我提问。'];
+  const promptData = [
     {
-    value: 'helpMd',
-    label: '中国医疗耗材之都是哪里？',
-    iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
-    // desc: '了解当前大模型可以帮你做的事',
-  },
-];
+      value: 'quickSort',
+      label: '驼人集团在哪里？',
+      iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
+      // desc: '使用 js 实现一个快速排序',
+    },
+    {
+      value: 'helpMd',
+      label: '你可以帮我做些什么？',
+      iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+      // desc: '了解当前大模型可以帮你做的事',
+    },
+  ];
+  const promptData1 = [
+    {
+      value: 'quickSort',
+      label: '医疗器械都有哪些？',
+      iconConfig: { name: 'icon-info-o', color: '#5e7ce0' },
+      // desc: '使用 js 实现一个快速排序',
+    },
+    {
+      value: 'helpMd',
+      label: '医疗器械注册流程是怎样的？',
+      iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+      // desc: '了解当前大模型可以帮你做的事',
+    },
+    {
+      value: 'helpMd',
+      label: '中国医疗耗材之都是哪里？',
+      iconConfig: { name: 'icon-star', color: 'rgb(255, 215, 0)' },
+      // desc: '了解当前大模型可以帮你做的事',
+    },
+  ];
   const simplePrompt = [
     {
       value: 'quickSort',
@@ -166,62 +236,147 @@ const promptData1 = [
     { icon: 'icon-standard', text: '词库' },
     { icon: 'icon-add', text: '附件' },
   ];
+  const allMsgs = ref<any[][]>([
+    [
+      {
+        from: 'user',
+        content: '你好！很高兴见到你！',
+        avatarConfig: { name: 'user' },
+      },
+      {
+        from: 'model',
+        content:
+          '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
+        avatarConfig: { name: 'model' },
+        id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
+        loading: false,
+      },
+    ],
+    [
+      {
+        from: 'user',
+        content: '你好！很高兴见到你！',
+        avatarConfig: { name: 'user' },
+      },
+      {
+        from: 'model',
+        content:
+          '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
+        avatarConfig: { name: 'model' },
+        id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
+        loading: false,
+      },
+    ],
+  ]);
+  const messages = ref<any[]>([
+    // {
+    //   from: 'user',
+    //   content: '你好！很高兴见到你！',
+    //   avatarConfig: { name: 'user' },
+    // },
+    // {
+    //   from: 'model',
+    //   content: '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
+    //   avatarConfig: { name: 'model' },
+    //   id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
+    //   loading: false,
+    // }
+  ]);
+  // messages.value = [
+  //   {
+  //     from: 'model',
+  //     content: '你好！很高兴见到你！',
+  //     // avatarConfig: { name: 'model' },
+  //     id: '',
+  //     loading: false,
+  //   },
+  // ];
+  const client = ref<OpenAI>();
 
-  const messages = ref<any[]>([]);
-const client = ref<OpenAI>();
-
-client.value = new OpenAI({
-  apiKey: 'sk-4bf67fef6d4b463ebf8599a14cd25cbd', // 模型APIKey
-  baseURL: 'https://api.deepseek.com/v1', // 模型API地址
-  dangerouslyAllowBrowser: true,
-});
+  client.value = new OpenAI({
+    apiKey: 'sk-4bf67fef6d4b463ebf8599a14cd25cbd', // 模型APIKey
+    baseURL: 'https://api.deepseek.com/v1', // 模型API地址
+    dangerouslyAllowBrowser: true,
+  });
   const newConversation = () => {
+    // 将之前的对话存储起来
+    // console.log(...messages.value);
+    // allMsgs.value.push([...messages.value]);
+    message.success('开始新对话！');
     startPage.value = true;
     messages.value = [];
   };
+  const scrollToBottom = async (smooth = true) => {
+    // console.log('触发');
+    await nextTick();
+    const offHeight = talkContent.value?.$el?.offsetHeight;
+    const scroolheight = talkContent.value?.$el?.scrollHeight;
 
-const fetchData = async (ques) => {
-  if (!client.value) {
-  console.error('OpenAI client is not initialized.');
-  return;
-}
-console.log('OpenAI client is initialized.',client.value);
-  messages.value.push({
-    from: 'model',
-    content: '',
-    avatarConfig: { name: 'model' },
-    id: '',
-    loading: true,
-  });
-  const completion = await client.value!.chat.completions.create({
-    model: 'deepseek-reasoner', // 根据deepseek模型列表进行替换
-    messages: [{ role: 'user', content: ques }],
-    stream: true, // 为 true 则开启接口的流式返回
-  });
-  messages.value[messages.value.length - 1].loading = false;
-  console.log('completion', completion);
-  for await (const chunk of completion) {
-    console.log(chunk);
-    const content = chunk.choices[0]?.delta?.content || '';
-    const chatId = chunk.id;
-    messages.value[messages.value.length - 1].content += content;
-    messages.value[messages.value.length - 1].id = chatId;
-  }
-};
-const onSubmit = (evt) => {
-  inputValue.value = '';
-  startPage.value = false;
-  // 用户发送消息
-  messages.value.push({
-    from: 'user',
-    content: evt,
-    avatarConfig: { name: 'user' },
-  });
+    // console.log('offHeight', offHeight);
+    // console.log('scroolheight', scroolheight);
+    if (smooth) {
+      talkContent.value?.$el?.scrollTo({
+        top: offHeight,
+        behavior: 'smooth',
+      });
+    } else {
+      talkContent.value?.$el?.scrollTo(0, scroolheight);
+    }
+  };
 
-  console.log('用户发送的消息为：', evt);
+  const fetchData = async (ques) => {
+    if (!client.value) {
+      console.error('OpenAI client is not initialized.');
+      return;
+    }
+    console.log('OpenAI client is initialized.', client.value);
 
-  fetchData(evt);
-};
+    await scrollToBottom(false);
+    const completion = await client.value!.chat.completions.create({
+      model: 'deepseek-reasoner', // 根据deepseek模型列表进行替换
+      messages: [{ role: 'user', content: ques }],
+      stream: true, // 为 true 则开启接口的流式返回
+    });
+
+    for await (const chunk of completion) {
+      // console.log(chunk);
+      // console.log(chunk.choices[0]?.delta?.content);
+      if (
+        chunk.choices[0]?.delta?.content !== null &&
+        chunk.choices[0]?.delta?.content !== undefined
+      ) {
+        messages.value[messages.value.length - 1].loading = false;
+      }
+      const content = chunk.choices[0]?.delta?.content || '';
+      const chatId = chunk.id;
+      messages.value[messages.value.length - 1].content += content;
+      messages.value[messages.value.length - 1].id = chatId;
+      await scrollToBottom(false);
+    }
+    await scrollToBottom(false);
+  };
+  const onSubmit = async (evt) => {
+    inputValue.value = '';
+    startPage.value = false;
+    // 用户发送消息
+    messages.value.push({
+      from: 'user',
+      content: evt,
+      avatarConfig: { name: 'user' },
+    });
+    messages.value.push({
+      from: 'model',
+      content: '',
+      avatarConfig: { name: 'model' },
+      id: null,
+      loading: true,
+    });
+    console.log('用户发送的消息为：', evt);
+
+    await scrollToBottom();
+    fetchData(evt);
+    // scrollToBottom()
+  };
   // const onSubmit = (evt) => {
   //   inputValue.value = '';
   //   startPage.value = false;
@@ -244,32 +399,28 @@ const onSubmit = (evt) => {
 </script>
 
 <style lang="scss" scoped>
-
   .container {
-    width: 1000px;
-    height: calc(100vh - 82px);
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 16px;
+    width: 80%;
+    height: 100%;
+    // height: 100%;
+    // margin: 10px auto;
+    padding: 30px;
+    // border: 1px solid #ddd;
+    border-radius: 0 8px 8px 0;
     background: #fff;
     gap: 8px;
-  } 
-  
+  }
+
   :deep(.mc-introduction-logo-container img) {
     width: 30px;
     height: 30px;
   }
 
-
-    
-
-
   .content-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    overflow: auto;
+    overflow: scroll;
+    overflow-x: hidden;
   }
 
   .input-foot-wrapper {
@@ -279,7 +430,7 @@ const onSubmit = (evt) => {
     width: 100%;
     height: 100%;
     margin-right: 8px;
-    
+
     .input-foot-left {
       display: flex;
       align-items: center;
@@ -315,8 +466,8 @@ const onSubmit = (evt) => {
     }
   }
 
-    :deep(.mc-header-logo){
-width: 80px;
-height: 30px;
+  :deep(.mc-header-logo) {
+    width: 80px;
+    height: 30px;
   }
 </style>

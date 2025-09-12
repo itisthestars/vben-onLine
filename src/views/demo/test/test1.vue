@@ -1,3 +1,4 @@
+/* stylelint-disable at-rule-no-unknown */
 <template>
   <div
     >这是测试页面1-- 一个页面只能有一个根元素
@@ -19,7 +20,7 @@
         <loading-outlined /> </a-space
     ></div>
     <div
-      >iconify iconname<Icon icon="skill-icons:gitlab-light" color="#3fb27f" size="30"></Icon>
+      >iconify iconname<Icon icon="skill-icons:gitlab-light" color="#3fb27f" size="30" />
       iconsvg
       <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 256 256">
         <g fill="none">
@@ -101,7 +102,10 @@
                     <Button type="primary" size="small" @click="edit(record.key, record)"
                       >编辑</Button
                     >
-                      <Button type="primary" size="small" @click="console.log(text, index, column, record)"
+                    <Button
+                      type="primary"
+                      size="small"
+                      @click="console.log(text, index, column, record)"
                       >打印</Button
                     >
                     <Button type="primary" size="small" @click="del(record.key)"
@@ -116,15 +120,15 @@
         <Modal @ok="handldOk" v-model:open="isOpenEdit">
           <template #title>
             <span style="display: inline-block; width: 400px; cursor: move" ref="modalTitleRef"
-              >用户信息修改<Icon icon="line-md:edit-twotone" size="16"></Icon>
-              <Icon icon="si:move-duotone" size="16"></Icon
-            ></span>
+              >用户信息修改<Icon icon="line-md:edit-twotone" size="16" />
+              <Icon icon="si:move-duotone" size="16"
+            /></span>
           </template>
           <template #closeIcon>
-            <Icon icon="logos:close" size="32"></Icon>
+            <Icon icon="logos:close" size="32" />
           </template>
           <template #cancelText>
-            <span>放弃编辑<Icon icon="noto-v1:face-without-mouth" size="16"></Icon></span>
+            <span>放弃编辑<Icon icon="noto-v1:face-without-mouth" size="16" /></span>
           </template>
           <template #modalRender="{ originVNode }">
             <div :style="transformStyle">
@@ -145,8 +149,8 @@
               ><div style="padding: 0 5px">Name<user-outlined /></div>
             </template>
             <template #addonAfter
-              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
-            ></template>
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"
+            /></template>
           </Input>
 
           <Input
@@ -160,16 +164,14 @@
             <template #suffix>
               <Tooltip title="请修改信息">
                 <info-circle-outlined style="color: rgb(0 0 0 / 45%)" />
-              </Tooltip>  
+              </Tooltip>
             </template>
             <template #addonBefore
-              ><div style="padding: 0 5px"
-                >Age <Icon icon="openmoji:mage" size="25"></Icon
-              ></div>
+              ><div style="padding: 0 5px">Age <Icon icon="openmoji:mage" size="25" /></div>
             </template>
             <template #addonAfter
-              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
-            ></template>
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"
+            /></template>
           </Input>
           <Input style="margin-top: 5px" v-model:value="edititem.address" placeholder="Basic usage">
             <template #prefix>
@@ -181,13 +183,11 @@
               </Tooltip>
             </template>
             <template #addonBefore
-              ><div style="padding: 0 5px"
-                >Address <Icon icon="entypo:address" size="25"></Icon
-              ></div>
+              ><div style="padding: 0 5px">Address <Icon icon="entypo:address" size="25" /></div>
             </template>
             <template #addonAfter
-              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"></Icon
-            ></template>
+              ><Icon icon="streamline-ultimate-color:smiley-prank" size="16"
+            /></template>
           </Input>
           <br />
           <br />
@@ -196,7 +196,7 @@
       <div>
         <Row :gutter="10">
           <Col class="gutter-row" :span="6">
-           <Button  type="primary" danger @click="useGoPath()">Usego 跳转</Button>
+            <Button type="primary" danger @click="useGoPath()">Usego 跳转</Button>
           </Col>
           <Col class="gutter-row" :span="12">
             <div class="gutter-box">col-6</div>
@@ -248,7 +248,8 @@
   import Icon from '@/components/Icon/Icon.vue';
   import { useDraggable } from '@vueuse/core';
   import { ref, computed, watch, watchEffect } from 'vue';
-import { GoType, useGo } from '@/hooks/web/usePage';
+  import { GoType, useGo } from '@/hooks/web/usePage';
+
   const value1 = ref<number>(0);
   const value2 = ref<[number, number]>([20, 50]);
   const disabled = ref<boolean>(false);
@@ -471,8 +472,8 @@ import { GoType, useGo } from '@/hooks/web/usePage';
     // 更新分页配置（current页码 或 pageSize每页条数）
     paginationConfig.value = {
       ...paginationConfig.value,
-      current: pagination.current, // 新页码;currentcurrentcurrentcurrentcurrent
-      pageSize: pagination.pageSize, // 新每页条数pageSizepageSizepageSizepageSize
+      current: pagination.current, // 新页码;currentcurrentcurrentcurrentcurrentcurrentcurrent
+      pageSize: pagination.pageSize, // 新每页条数pageSizepageSizepageSizepageSizepageSizepageSize
     };
   };
   const del = (key: string) => {
@@ -533,12 +534,12 @@ import { GoType, useGo } from '@/hooks/web/usePage';
   // });
   const useGoPath = () => {
     // go();
-    go('/dashboard/workbench?data1=1',GoType.after);
+    go('/dashboard/workbench?data1=1', GoType.after);
   };
 </script>
 
 <style scoped lang="less">
-@bg1:rgb(87, 233, 194);
+  @bg1: #52c41a;
 
   :deep(.ant-table-thead > tr > th) {
     background-color: #1890ff !important; /* Ant Design 蓝色主题色 */
@@ -557,12 +558,12 @@ import { GoType, useGo } from '@/hooks/web/usePage';
   }
 
   :deep(.ant-input) {
-    // color: pink;colorcolorcolorcolorcolorcolor
+    // color: pink;colorcolorcolorcolorcolorcolorcolorcolor
   }
 
   /* 大于18岁的样式 - 使用deep穿透到内部input元素 */
   :deep(.age-over-18 .ant-input) {
-    color:@bg1 !important;
+    color: @bg1 !important;
   }
 
   /* 小于等于18岁的样式 */
