@@ -1,10 +1,19 @@
 <template>
   <Card
-    style="height: 100%; overflow: auto; overflow-x: hidden; border-radius: 8px 0 0 8px"
-    title="存储对话列表"
+
+    style="
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      border-radius: 8px 0 0 8px;
+      box-shadow: -4px 2px 8px 4px rgb(0 0 0 / 20%);
+    "
   >
+    <template #title>
+      <img style="width: auto; height: 30px" src="@/assets/images/tuoren-logo.png" alt="" />
+    </template>
     <p style="margin-bottom: 16px; color: rgb(0 0 0 / 85%); font-size: 14px; font-weight: 500">
-      <button @click="clearTalk">清除对话</button>
+      <button @click="clearTalk">清除所有对话</button>
     </p>
     <Card
       v-for="(item, index) in allMsgs"
@@ -12,6 +21,7 @@
       :hoverable="true"
       :title="item[0]?.content || '对话'"
       style="margin-top: 10px"
+      @click="pullMsg(item)"
     >
       <div
         style="
@@ -30,10 +40,13 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps, ref, watch, onMounted } from 'vue';
+  import { defineProps, ref, watch, onMounted, defineEmits } from 'vue';
   import type { PropType } from 'vue';
   import { Card } from 'ant-design-vue';
-
+  const emits = defineEmits(['selectMsg']);
+  const pullMsg = (msg) => {
+    emits('selectMsg', msg);
+  };
   // 明确 props 类型
   const props = defineProps({
     currentMsg: {
@@ -44,36 +57,36 @@
 
   // 使用内部状态，不直接复用 props 引用
   const allMsgs = ref<any[][]>([
-    [
-      {
-        from: 'user',
-        content: '你好！很高兴见到你！',
-        avatarConfig: { name: 'user' },
-      },
-      {
-        from: 'model',
-        content:
-          '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
-        avatarConfig: { name: 'model' },
-        id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
-        loading: false,
-      },
-    ],
-    [
-      {
-        from: 'user',
-        content: '你好！很高兴见到你！',
-        avatarConfig: { name: 'user' },
-      },
-      {
-        from: 'model',
-        content:
-          '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
-        avatarConfig: { name: 'model' },
-        id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
-        loading: false,
-      },
-    ],
+    // [
+    //   {
+    //     role: 'user',
+    //     content: '11111！',
+    //     avatarConfig: { name: 'user' },
+    //   },
+    //   {
+    //     role: 'assistant',
+    //     content:
+    //       '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
+    //     avatarConfig: { name: 'model' },
+    //     id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
+    //     loading: false,
+    //   },
+    // ],
+    // [
+    //   {
+    //     role: 'user',
+    //     content: '你好！很高兴见到你！',
+    //     avatarConfig: { name: 'user' },
+    //   },
+    //   {
+    //     role: 'assistant',
+    //     content:
+    //       '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
+    //     avatarConfig: { name: 'model' },
+    //     id: '0568ab1e-9985-4f34-9b8b-1c71de1f2271',
+    //     loading: false,
+    //   },
+    // ],
   ]);
 
   // 从 localStorage 恢复（如果有）
@@ -101,17 +114,24 @@
       // 这里避免重复追加：可根据 id 或内容做去重检查（示例中简单追加）
       if (
         (allMsgs.value.length === 0 ||
-          allMsgs.value[allMsgs.value.length - 1][1]?.id !== copy[1]?.id) &&
+          allMsgs.value.findIndex((item) => item[1]?.id === copy[1]?.id) === -1) &&
         copy[1]?.id !== null
       ) {
-        console.log('追加新对话', copy);
+        // 检查是否已存在相同 id 的对话，避免重复追加
+        console.log('追加新对话');
         allMsgs.value.push(copy);
         localStorage.setItem('allmsgs', JSON.stringify(allMsgs.value));
-      } else if (copy[1]?.id !== null) {
-        console.log('更新最后一条对话');
-        allMsgs.value[allMsgs.value.length - 1] = copy;
+      } else if (allMsgs.value.findIndex((item) => item[1]?.id === copy[1]?.id) !== -1) {
+        console.log('对话已存在，更新对应的对话内容');
+        const index = allMsgs.value.findIndex((item) => item[1]?.id === copy[1]?.id);
+        allMsgs.value[index] = copy;
         localStorage.setItem('allmsgs', JSON.stringify(allMsgs.value));
       }
+      // else if ( copy[1]?.id !== null) {
+      //   console.log('更新最后一条对话');
+      //   allMsgs.value[allMsgs.value.length - 1] = props.currentMsg;
+      //   localStorage.setItem('allmsgs', JSON.stringify(allMsgs.value));
+      // }
     },
     { deep: true },
   );
@@ -133,6 +153,7 @@
     try {
       localStorage.removeItem('allmsgs');
       allMsgs.value = [];
+      emits('selectMsg', [], true); // 通知父组件清空 currentMsg
     } catch (e) {
       console.error(e);
     }

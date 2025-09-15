@@ -1,8 +1,10 @@
 <template>
-  <Row style="height: 100%; background: pink">
-    <Col :span="3"></Col>
-    <Col style="height: 100%" :span="5"><leftList :currentMsg="messages"></leftList></Col>
-    <Col style="height: 100%; background-color: aqua" :span="16">
+  <Row style="height: 98%; margin-top: 10px">
+    <Col :span="2"></Col>
+    <Col style="height: 100%" :span="5"
+      ><leftList :currentMsg="messages" @selectMsg="getMsg"></leftList
+    ></Col>
+    <Col style="height: 100%" :span="17">
       <McLayout class="container">
         <McHeader
           :title="'TUORen'"
@@ -11,9 +13,7 @@
           @logo-clicked="onLogoClicked"
         >
           <template #operationArea>
-            <div class="operations">
-              <i class="icon-helping"></i>
-            </div>
+            <div class="operations"> 可用余额{{ balance }}<i class="icon-helping"></i> </div>
           </template>
         </McHeader>
         <McLayoutContent
@@ -49,7 +49,7 @@
         <McLayoutContent ref="talkContent" class="content-container" v-else>
           <template v-for="(msg, idx) in messages" :key="idx">
             <McBubble
-              v-if="msg.from === 'user'"
+              v-if="msg.role === 'user'"
               :content="msg.content"
               :align="'right'"
               :avatarPosition="'top'"
@@ -133,10 +133,11 @@
   import { Row, Col, message } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import leftList from './components/leftList.vue';
-  import { ref, nextTick, ComponentPublicInstance } from 'vue';
+  import { ref, nextTick, onMounted } from 'vue';
   import { Button } from 'vue-devui/button';
   import 'vue-devui/button/style.css';
   import OpenAI from 'openai';
+  import axios from 'axios';
 
   const theme = ref('light');
   const talkContent = ref<any>(null);
@@ -239,12 +240,12 @@ console.log(quickSort(arr)); // 输出排序后的数组
   const allMsgs = ref<any[][]>([
     [
       {
-        from: 'user',
+        role: 'user',
         content: '你好！很高兴见到你！',
         avatarConfig: { name: 'user' },
       },
       {
-        from: 'model',
+        role: 'assistant',
         content:
           '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
         avatarConfig: { name: 'model' },
@@ -254,12 +255,12 @@ console.log(quickSort(arr)); // 输出排序后的数组
     ],
     [
       {
-        from: 'user',
+        role: 'user',
         content: '你好！很高兴见到你！',
         avatarConfig: { name: 'user' },
       },
       {
-        from: 'model',
+        role: 'assistant',
         content:
           '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
         avatarConfig: { name: 'model' },
@@ -270,12 +271,12 @@ console.log(quickSort(arr)); // 输出排序后的数组
   ]);
   const messages = ref<any[]>([
     // {
-    //   from: 'user',
+    //   role: 'user',
     //   content: '你好！很高兴见到你！',
     //   avatarConfig: { name: 'user' },
     // },
     // {
-    //   from: 'model',
+    //   role: 'assistant',
     //   content: '好的，驼人集团的总部位于中国河南省**新乡市长垣市**。\n\n这是一个非常具体的位置，以下是详细信息：\n\n**1. 总部详细地址：**\n* **地址：** 河南省新乡市长垣市驼人健康产业园区\n* **邮编：** 453400\n\n**2. 关于所在地——长垣市：**\n* 长垣市是河南省的一个县级市，由新乡市代管。\n* 它被称为“中国医疗耗材之都”，医疗器械产业是其支柱产业。驼人集团正是从这里发展起来，并成为该领域的龙头企业。\n\n**3. 主要生产基地和园区：**\n* 驼人集团的核心生产和运营都集中在**长垣市**。\n* 集团建设了规模庞大的“**驼人健康产业园区**”，集生产、研发、交易、物流、医疗、教育等功能于一体。\n\n**4. 其他地点：**\n* 除了长垣总部，驼人集团在全国主要省市（如北京、上海、广州等）以及海外（如美国、印度、德国等）设有**子公司、办事处或研发中心**，用于市场销售、技术支持和研发合作。\n* 但其**主要制造基地和集团总部**始终在河南长垣。\n\n**总结一下：**\n\n如果您需要联系集团总部、参观工厂或进行商务合作，您的目的地就是：\n\n**河南省新乡市长垣市**。\n\n**如何前往：**\n* **最近的机场：** 新郑国际机场（CGO，位于郑州），然后可乘坐高铁或汽车前往长垣。\n* **高铁：** 可乘坐高铁至“**长垣站**”，出站后打车即可到达驼人集团园区。\n* **自驾：** 导航至“驼人健康产业园区”即可。\n\n如果您需要具体的联系方式，可以访问他们的官方网站（通常搜索“驼人集团官网”即可找到）获取最新的电话和邮箱。',
     //   avatarConfig: { name: 'model' },
     //   id: '0568ab1e-9985-4f34-9b8b-1c71de1f2270',
@@ -284,7 +285,7 @@ console.log(quickSort(arr)); // 输出排序后的数组
   ]);
   // messages.value = [
   //   {
-  //     from: 'model',
+  //     role: 'assistant',
   //     content: '你好！很高兴见到你！',
   //     // avatarConfig: { name: 'model' },
   //     id: '',
@@ -307,20 +308,20 @@ console.log(quickSort(arr)); // 输出排序后的数组
     messages.value = [];
   };
   const scrollToBottom = async (smooth = true) => {
-    // console.log('触发');
     await nextTick();
-    const offHeight = talkContent.value?.$el?.offsetHeight;
-    const scroolheight = talkContent.value?.$el?.scrollHeight;
+    const element = talkContent.value?.$el;
 
-    // console.log('offHeight', offHeight);
-    // console.log('scroolheight', scroolheight);
+    if (!element) return; // 元素不存在时直接返回
+
+    const scrollHeight = element.scrollHeight;
+
     if (smooth) {
-      talkContent.value?.$el?.scrollTo({
-        top: offHeight,
+      element.scrollTo({
+        top: scrollHeight,
         behavior: 'smooth',
       });
     } else {
-      talkContent.value?.$el?.scrollTo(0, scroolheight);
+      element.scrollTo(0, scrollHeight);
     }
   };
 
@@ -331,10 +332,21 @@ console.log(quickSort(arr)); // 输出排序后的数组
     }
     console.log('OpenAI client is initialized.', client.value);
 
-    await scrollToBottom(false);
+    await scrollToBottom(true);
+    // 拼接之前的对话，实现多轮上下文对话
+    const newMessages = ref<any>([]);
+    if (messages.value.length <= 2) {
+      newMessages.value = [{ role: messages.value[0].role, content: messages.value[0].content }];
+    } else {
+      newMessages.value = messages.value.slice(0, messages.value.length - 1).map((msg) => {
+        return { role: msg.role, content: msg.content };
+      });
+    }
+    // const newMessages = [...messages.value, [{ role: 'user', content: ques }]];
+    console.log('发送给模型的消息：', newMessages);
     const completion = await client.value!.chat.completions.create({
-      model: 'deepseek-reasoner', // 根据deepseek模型列表进行替换
-      messages: [{ role: 'user', content: ques }],
+      model: 'deepseek-chat', // 根据deepseek模型列表进行替换
+      messages: newMessages.value,
       stream: true, // 为 true 则开启接口的流式返回
     });
 
@@ -354,18 +366,19 @@ console.log(quickSort(arr)); // 输出排序后的数组
       await scrollToBottom(false);
     }
     await scrollToBottom(false);
+    getBalance();
   };
   const onSubmit = async (evt) => {
     inputValue.value = '';
     startPage.value = false;
     // 用户发送消息
     messages.value.push({
-      from: 'user',
+      role: 'user',
       content: evt,
       avatarConfig: { name: 'user' },
     });
     messages.value.push({
-      from: 'model',
+      role: 'assistant',
       content: '',
       avatarConfig: { name: 'model' },
       id: null,
@@ -373,7 +386,7 @@ console.log(quickSort(arr)); // 输出排序后的数组
     });
     console.log('用户发送的消息为：', evt);
 
-    await scrollToBottom();
+    await scrollToBottom(true);
     fetchData(evt);
     // scrollToBottom()
   };
@@ -382,13 +395,13 @@ console.log(quickSort(arr)); // 输出排序后的数组
   //   startPage.value = false;
   //   // 用户发送消息
   //   messages.value.push({
-  //     from: 'user',
+  //     role: 'user',
   //     content: evt,
   //   });
   //   setTimeout(() => {
   //     // 模型返回消息
   //     messages.value.push({
-  //       from: 'model',
+  //       role: 'model',
   //       content: evt,
   //     });
   //   }, 200);
@@ -396,6 +409,37 @@ console.log(quickSort(arr)); // 输出排序后的数组
   const onLogoClicked = () => {
     window.open('https://www.tuoren.com', '_blank');
   };
+  const getMsg = (msg, start = false) => {
+    console.log('选中消息', msg);
+    messages.value = msg;
+    startPage.value = start;
+  };
+
+  // 查询余额
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'https://api.deepseek.com/user/balance',
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Bearer sk-4bf67fef6d4b463ebf8599a14cd25cbd',
+    },
+  };
+  // 可用余额
+  const balance = ref(0);
+  const getBalance = async () => {
+    try {
+      const response = await axios.request(config);
+      console.log(response.data.balance_infos[0].total_balance);
+      balance.value = response.data.balance_infos[0].total_balance;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  onMounted(() => {
+    getBalance();
+  });
 </script>
 
 <style lang="scss" scoped>
@@ -409,6 +453,7 @@ console.log(quickSort(arr)); // 输出排序后的数组
     border-radius: 0 8px 8px 0;
     background: #fff;
     gap: 8px;
+    box-shadow:  5px 2px 6px 4px rgb(0 0 0 / 20%); 
   }
 
   :deep(.mc-introduction-logo-container img) {

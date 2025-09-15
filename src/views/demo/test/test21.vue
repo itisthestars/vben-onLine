@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="theme-switch-container"></div>
     <div class="btn-container">
       <d-button variant="solid" @click="changeTheme">切换主题</d-button>
     </div>
@@ -85,6 +86,15 @@ console.log(quickSort(arr)); // 输出排序后的数组
   });
 </script>
 <style scoped lang="scss">
+  .theme-switch-container {
+    width: 400px;
+    height: 400px;
+    margin-top: 40px;
+    margin-left: 100px;
+    background-color: pink;
+    box-shadow: 4px 2px 8px 4px rgb(0 0 0 / 20%);
+  }
+
   .btn-container {
     display: flex;
     justify-content: end;
