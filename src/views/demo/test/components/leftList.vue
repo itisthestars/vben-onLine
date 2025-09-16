@@ -119,7 +119,7 @@
       ) {
         // 检查是否已存在相同 id 的对话，避免重复追加
         console.log('追加新对话');
-        allMsgs.value.push(copy);
+        allMsgs.value.unshift(copy);
         localStorage.setItem('allmsgs', JSON.stringify(allMsgs.value));
       } else if (allMsgs.value.findIndex((item) => item[1]?.id === copy[1]?.id) !== -1) {
         console.log('对话已存在，更新对应的对话内容');

@@ -13,7 +13,7 @@
           @logo-clicked="onLogoClicked"
         >
           <template #operationArea>
-            <div class="operations"> 可用余额{{ balance }}<i class="icon-helping"></i> </div>
+            <div class="operations"> DS可用余额{{ balance }}<i class="icon-helping"></i> </div>
           </template>
         </McHeader>
         <McLayoutContent
@@ -65,9 +65,20 @@
               :avatarConfig="{ imgSrc: 'https://matechat.gitcode.com/logo.svg', displayName: 'TR' }"
               :loading="msg.loading"
               :avatarPosition="'top'"
+              :class="isThingk ? 'think-block-shrink' : 'think-block-expand'"
             >
               <template #default>
-                <McMarkdownCard :content="msg.content" :theme="theme" />
+                <div
+                  v-show="msg.model=='deepseek-reasoner'"
+                  class="think-toggle-btn"
+                  @click="toggleThink()"
+                >
+                  <!-- <i class="icon-point"></i> -->
+                  <Icon icon="noto:thinking-face" size="30" color="#00a2ff"></Icon>
+                  <span>{{ thinkBtnText }}</span>
+                  <i :class="btnIcon"></i>
+                </div>
+                <McMarkdownCard :enableThink="true" :content="msg.content" :theme="theme" />
               </template>
               <template #loadingTpl>
                 <div
@@ -104,10 +115,20 @@
             <template #extra>
               <div class="input-foot-wrapper">
                 <div class="input-foot-left">
-                  <span v-for="(item, index) in inputFootIcons" :key="index">
+                  <!-- <span v-for="(item, index) in inputFootIcons" :key="index">
                     <i :class="item.icon"></i>
                     {{ item.text }}
-                  </span>
+                  </span> -->
+                  <!-- 模型选择 -->
+                   选择大模型:
+                  <Select
+                    ref="select"
+                    v-model:value="selectModel"
+                    placement="topRight"
+                    style="width: 150px"
+                    :options="modelOptions"
+                    @change="modelChange"
+                  ></Select>
                   <span class="input-foot-dividing-line"></span>
                   <span class="input-foot-maxlength">{{ inputValue.length }}/2000</span>
                 </div>
@@ -130,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-  import { Row, Col, message } from 'ant-design-vue';
+  import { Row, Col, message, Select } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import leftList from './components/leftList.vue';
   import { ref, nextTick, onMounted } from 'vue';
@@ -141,47 +162,70 @@
 
   const theme = ref('light');
   const talkContent = ref<any>(null);
+  const thinkBtnText = ref('深度思考内容');
+  const btnIcon = ref('icon-chevron-up-2');
+  const isThingk = ref(false);
+  //选择使用的模型 默认ds思考的那个模型
+  const selectModel = ref('deepseek-reasoner');
+  const modelOptions = [
+    {
+      value: 'deepseek-chat',
+      label: 'DeepSeek-chat',
+    },
+    { value: 'deepseek-reasoner', label: 'DeepSeek-reasoner' },
+  ];
+  const toggleThink = () => {
+    isThingk.value = !isThingk.value;
+    console.log('isThingk', isThingk.value);
+    // thinkBtnText.value = isThingk.value ? '已深度思考 (用时16秒)' : '深度思考';
+    btnIcon.value = isThingk.value ? 'icon-chevron-down-2' : 'icon-chevron-up-2';
+  };
+  const modelChange = (value) => {
+    selectModel.value = value;
+    console.log(`selected ${value}`);
+  };
+
   const contentTest = ref(`
-# 快速排序（Quick Sort）
+    # 快速排序（Quick Sort）
 
-### 介绍
-**快速排序（Quick Sort）**：是一种高效的排序算法，它采用分治法（Divide and Conquer）的思想。它的基本思路是：
+    ### 介绍
+    **快速排序（Quick Sort）**：是一种高效的排序算法，它采用分治法（Divide and Conquer）的思想。它的基本思路是：
 
-1. 选择一个基准值（pivot）
-2. 将数组分成两部分：小于基准值的部分和大于等于基准值的部分
-3. 递归地对这两部分进行排序
+    1. 选择一个基准值（pivot）
+    2. 将数组分成两部分：小于基准值的部分和大于等于基准值的部分
+    3. 递归地对这两部分进行排序
 
-### 代码实现
+    ### 代码实现
 
-1. 以下是快速排序的实现方法
-\`\`\`ts
-function quickSort(arr) {
-  function quickSort(arr) {
-  if (arr.length < 2) {
-    return arr;
-  }
+    1. 以下是快速排序的实现方法
+    \`\`\`ts
+    function quickSort(arr) {
+      function quickSort(arr) {
+      if (arr.length < 2) {
+        return arr;
+      }
 
-  const pivot = arr[0];
-  const left = [];
-  const right = [];
+      const pivot = arr[0];
+      const left = [];
+      const right = [];
 
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i] < pivot) {
-      left.push(arr[i]);
-    } else {
-      right.push(arr[i]);
+      for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < pivot) {
+          left.push(arr[i]);
+        } else {
+          right.push(arr[i]);
+        }
+      }
+
+      return [...quickSort(left), pivot, ...quickSort(right)];
     }
-  }
 
-  return [...quickSort(left), pivot, ...quickSort(right)];
-}
-
-// 使用示例
-const arr = [3, 6, 8, 10, 1, 2, 1];
-console.log(quickSort(arr)); // 输出排序后的数组
-}
-\`\`\`
-`);
+    // 使用示例
+    const arr = [3, 6, 8, 10, 1, 2, 1];
+    console.log(quickSort(arr)); // 输出排序后的数组
+    }
+    \`\`\`
+    `);
   // const isLoading = ref(true);
   const description = ['如果您有任何问题，请随时向我提问。'];
   const promptData = [
@@ -324,8 +368,10 @@ console.log(quickSort(arr)); // 输出排序后的数组
       element.scrollTo(0, scrollHeight);
     }
   };
-
+  let totalReasoningContent = '';
   const fetchData = async (ques) => {
+    isThingk.value = false;
+    totalReasoningContent = '';
     if (!client.value) {
       console.error('OpenAI client is not initialized.');
       return;
@@ -343,26 +389,50 @@ console.log(quickSort(arr)); // 输出排序后的数组
       });
     }
     // const newMessages = [...messages.value, [{ role: 'user', content: ques }]];
-    console.log('发送给模型的消息：', newMessages);
+    // console.log('发送给模型的消息：', newMessages);
     const completion = await client.value!.chat.completions.create({
-      model: 'deepseek-chat', // 根据deepseek模型列表进行替换
+      // model: 'deepseek-reasoner',
+      model: selectModel.value,
       messages: newMessages.value,
       stream: true, // 为 true 则开启接口的流式返回
     });
 
     for await (const chunk of completion) {
       // console.log(chunk);
+      const chatId = chunk.id;
+      const reponseModel = chunk.model;
+      messages.value[messages.value.length - 1].id = chatId;
+      messages.value[messages.value.length - 1].model = reponseModel;
       // console.log(chunk.choices[0]?.delta?.content);
       if (
-        chunk.choices[0]?.delta?.content !== null &&
-        chunk.choices[0]?.delta?.content !== undefined
+        (chunk.choices[0]?.delta?.content !== null &&
+          chunk.choices[0]?.delta?.content !== undefined) ||
+        ((chunk.choices[0]?.delta as any)?.reasoning_content !== '' &&
+          (chunk.choices[0]?.delta as any)?.reasoning_content !== null)
       ) {
         messages.value[messages.value.length - 1].loading = false;
       }
-      const content = chunk.choices[0]?.delta?.content || '';
-      const chatId = chunk.id;
-      messages.value[messages.value.length - 1].content += content;
-      messages.value[messages.value.length - 1].id = chatId;
+      if (
+        (chunk.choices[0]?.delta as any)?.reasoning_content !== '' &&
+        (chunk.choices[0]?.delta as any)?.reasoning_content !== null &&
+        chunk.choices[0]?.delta?.content === null
+      ) {
+        // 这是思考内容reasoning_content，需要放在think标签里
+        let reasoningContent = (chunk.choices[0]?.delta as any)?.reasoning_content;
+        totalReasoningContent += reasoningContent;
+        messages.value[messages.value.length - 1].content = `<think>${totalReasoningContent}
+  </think>
+
+  `;
+      } else if (
+        chunk.choices[0]?.delta?.content !== null &&
+        chunk.choices[0]?.delta?.content !== ''
+      ) {
+        // 这是正常的回答内容content
+        const content = chunk.choices[0]?.delta?.content;
+        messages.value[messages.value.length - 1].content += content;
+      }
+      console.log('messages.value', messages.value[messages.value.length - 1].content);
       await scrollToBottom(false);
     }
     await scrollToBottom(false);
@@ -378,6 +448,7 @@ console.log(quickSort(arr)); // 输出排序后的数组
       avatarConfig: { name: 'user' },
     });
     messages.value.push({
+      model:'',
       role: 'assistant',
       content: '',
       avatarConfig: { name: 'model' },
@@ -453,7 +524,7 @@ console.log(quickSort(arr)); // 输出排序后的数组
     border-radius: 0 8px 8px 0;
     background: #fff;
     gap: 8px;
-    box-shadow:  5px 2px 6px 4px rgb(0 0 0 / 20%); 
+    box-shadow: 5px 2px 6px 4px rgb(0 0 0 / 20%);
   }
 
   :deep(.mc-introduction-logo-container img) {
@@ -514,5 +585,29 @@ console.log(quickSort(arr)); // 输出排序后的数组
   :deep(.mc-header-logo) {
     width: 80px;
     height: 30px;
+  }
+
+  .think-toggle-btn {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin-bottom: 12px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background-color: rgb(226 226 226);
+    cursor: pointer;
+    gap: 8px;
+
+    &:hover {
+      background-color: rgb(149 227 247);
+    }
+  }
+
+  :deep(.think-block-expand .mc-think-block) {
+    display: block;
+  }
+
+  :deep(.think-block-shrink .mc-think-block) {
+    display: none;
   }
 </style>
