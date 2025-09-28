@@ -7,9 +7,8 @@ import 'virtual:svg-icons-register';
 // Register MateChat
 import MateChat from '@matechat/core';
 import '@devui-design/icons/icomoon/devui-icon.css';
-
+// import * as echarts from 'echarts';
 import { createApp } from 'vue';
-
 import { registerGlobComp } from '@/components/registerGlobComp';
 import { setupGlobDirectives } from '@/directives';
 import { setupI18n } from '@/locales/setupI18n';

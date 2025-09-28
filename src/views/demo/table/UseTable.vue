@@ -61,7 +61,7 @@
     rowSelection: {
       type: 'checkbox',
     },
-    onColumnsChange: (data: ColumnChangeParam[]) => {
+    onColumnsChange: (data) => {
       console.log('ColumnsChanged', data);
     },
     showSelectionBar: true, // 显示多选状态栏

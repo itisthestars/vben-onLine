@@ -1,7 +1,7 @@
 <template>
   <PageWrapper title="UseForm操作示例">
     <a-button class="mb-4" type="primary" @click="showDrawer"> 更改设置 </a-button>
-
+    <a-button @click="updata()">更新</a-button>
     <Drawer v-model:open="open" title="更改设置" placement="right">
       <BasicForm ref="settingFormRef" @register="registerSetting" @submit="handleSubmitSetting">
         <template #other>
@@ -62,12 +62,12 @@
 
   const schemas: FormSchema[] = [
     {
-      field: 'field1',
+      field: 'field111',
       component: 'Input',
-      label: '字段1',
-      colProps: { span: 8 },
+      label: '字段11111',
+      colProps: { span: 12 },
       componentProps: {
-        placeholder: '自定义placeholder',
+        placeholder: '自定义placeho111lder',
         onChange: (e: any) => {
           console.log(e);
         },
@@ -426,13 +426,27 @@
 
   const open = ref<boolean>(false);
   const settingFormRef = ref();
-  const [registerSetting] = useForm({
+  const [registerSetting, { updateSchema: any }] = useForm({
     size: 'small',
     schemas: formSchemas,
     compact: true,
     actionColOptions: { span: 24 },
     showActionButtonGroup: false,
   });
+  const updata = () => {
+    updateSchema({
+      field: 'field2',
+      component: 'Input',
+      label: '字段11111',
+      colProps: { span: 12 },
+      componentProps: {
+        placeholder: '更新',
+        onChange: (e: any) => {
+          console.log(e);
+        },
+      },
+    });
+  };
   const resetSettings = async () => {
     setProps({ resetButtonOptions: { disabled: false, text: '重置' } });
     setProps({ submitButtonOptions: { disabled: false, loading: false } });

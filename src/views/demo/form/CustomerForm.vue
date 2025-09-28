@@ -74,7 +74,7 @@
       rules: [{ required: true }],
       renderComponentContent: (_, { disabled }) => {
         return {
-          suffix: () => (disabled ? 'suffix_disabled' : 'suffix_default'),
+          suffix: () => <div style="background-color: pink;">21</div>,
         };
       },
     },

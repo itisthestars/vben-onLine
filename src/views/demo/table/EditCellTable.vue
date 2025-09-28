@@ -20,7 +20,7 @@
 
   const columns: BasicColumn[] = [
     {
-      title: '输入框',
+      title: '输入框1',
       dataIndex: 'name',
       edit: true,
       editComponentProps: {

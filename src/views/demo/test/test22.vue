@@ -8,7 +8,7 @@
       <McLayout class="container">
         <McHeader
           :title="'TUORen'"
-          :logoImg="'src/assets/images/tuoren-logo.png'"
+     :logoImg="logoImg"
           :logoClickable="true"
           @logo-clicked="onLogoClicked"
         >
@@ -27,7 +27,7 @@
           "
         >
           <McIntroduction
-            :logoImg="'src/assets/images/tuoren-icon.png'"
+            :logoImg="logoIcon"
             :title="'TR'"
             :subTitle="'欢迎'"
             :description="description"
@@ -160,7 +160,8 @@
   import OpenAI from 'openai';
   import axios from 'axios';
   import { esbuildVersion } from 'vite';
-
+import logoImg from '@/assets/images/tuoren-logo.png'
+import logoIcon from '@/assets/images/tuoren-icon.png'
   const theme = ref('light');
   const talkContent = ref<any>(null);
   const thinkBtnText = ref('深度思考内容');

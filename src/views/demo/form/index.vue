@@ -1,5 +1,6 @@
 <template>
   <PageWrapper title="表单基础示例" contentFullHeight>
+
     <CollapseContainer title="基础示例">
       <BasicForm
         autoFocusFirstItem
@@ -8,6 +9,7 @@
         :actionColOptions="{ span: 24 }"
         @submit="handleSubmit"
         @reset="handleReset"
+        @field-value-change="handleFieldValueChange"
       >
         <template #selectA="{ model, field }">
           <Select
@@ -70,6 +72,9 @@
   import { cloneDeep } from 'lodash-es';
   import { areaRecord } from '@/api/demo/cascader';
   import { uploadApi } from '@/api/sys/upload';
+const handleFieldValueChange=(params: Recordable) => {
+  console.log('fieldValueChange:', params);
+};
 
   let debounceOptionsFn = useDebounceFn(onSearch, 300);
   const valueSelectA = ref<string[]>([]);
@@ -154,7 +159,7 @@
       field: 'field1',
       component: 'Input',
       label: ({ model }) => {
-        return `字段1${model.field3 ? model.field3 : ''}`;
+        return `字段111${model.field3 ? model.field3 : ''}`;
       },
 
       colProps: {
@@ -784,6 +789,14 @@
       required: true,
       colProps: {
         span: 8,
+      },
+      componentProps: () => {
+        return {
+          placeholder: '请输入数字',
+          min: 0,
+          max: 100,
+          step: 1,
+        };
       },
     },
     {

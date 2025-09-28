@@ -1,5 +1,6 @@
 import { VxeGridPropTypes, VxeTablePropTypes } from 'vxe-table';
-import tableProps from 'vxe-table/es/table/src/props';
+// import tableProps from 'vxe-table/es/table/src/props';
+import * as tableProps from 'vxe-table/es/table/src/props';
 import { CSSProperties } from 'vue';
 
 /**
