@@ -1,1 +1,0 @@
-import{d as o,ai as t,U as s,V as a,G as r,X as p,k as l}from"./vue-DdhQyU-d.js";const m={class:"p-5"},i=o({name:"Menu2Demo",__name:"Menu2",setup(u){return(_,e)=>{const n=t("a-input");return a(),s("div",m,[e[0]||(e[0]=r(" 多层级缓存-页面2 ",-1)),e[1]||(e[1]=p("br",null,null,-1)),l(n)])}}});export{i as default};

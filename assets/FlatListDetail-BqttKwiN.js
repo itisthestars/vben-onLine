@@ -1,1 +1,0 @@
-import{c as t}from"./entry/index-DAHXR0BT.js";import{U as e,V as r}from"./vue-DdhQyU-d.js";import"./antd-Bp8JzQqk.js";const c={};function o(n,a){return r(),e("div",null,"平级详情页")}const _=t(c,[["render",o]]);export{_ as default};
