@@ -469,6 +469,7 @@
 
   // 5. 监听分页变化事件（页码切换/每页条数切换）
   const handleTableChange = (pagination: any) => {
+    console.log('分页变化了：', pagination);
     // 更新分页配置（current页码 或 pageSize每页条数）
     paginationConfig.value = {
       ...paginationConfig.value,

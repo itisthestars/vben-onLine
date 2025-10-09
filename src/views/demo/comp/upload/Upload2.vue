@@ -12,15 +12,15 @@
   const { createMessage } = useMessage();
 
   const schemasValiate: FormSchema[] = [
-    {
-      field: 'field1',
-      component: 'Upload',
-      label: '字段1',
-      rules: [{ required: true, message: '请选择上传文件' }],
-      componentProps: {
-        api: uploadApi,
-      },
-    },
+    // {
+    //   field: 'field1',
+    //   component: 'Upload',
+    //   label: '字段1',
+    //   rules: [{ required: true, message: '请选择上传文件' }],
+    //   componentProps: {
+    //     api: uploadApi,
+    //   },
+    // },
     {
       field: 'field2',
       component: 'ImageUpload',
@@ -30,6 +30,9 @@
       },
       componentProps: {
         api: uploadApi,
+        onChange: (res: any) => {
+          console.log(res);
+        },
       },
     },
   ];
@@ -40,6 +43,7 @@
       span: 18,
     },
     submitFunc: () => {
+      console.log(getFieldsValueValiate());
       return new Promise((resolve) => {
         validate()
           .then(() => {

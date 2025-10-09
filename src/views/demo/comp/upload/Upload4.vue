@@ -49,6 +49,7 @@
           },
         ],
         beforePreviewData: (arg) => {
+          console.log('arg',arg);
           let data = arg
             .filter((item) => !!item)
             .map((item) => {

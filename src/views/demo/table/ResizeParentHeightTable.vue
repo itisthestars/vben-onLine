@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex p-4">
+  <div class="h-full bg-fuchsia-200 flex p-4">
     <div class="flex flex-col pr-4 w-1/2">
       <div class="flex-1 h-0">
         <BasicTable @register="registerTable" />

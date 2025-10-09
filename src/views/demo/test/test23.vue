@@ -37,6 +37,7 @@
       </template>
     </BasicTable>
     <Drawer1 @register="registerDrawer1" />
+    
   </div>
 </template>
 

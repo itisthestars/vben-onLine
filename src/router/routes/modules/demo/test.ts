@@ -65,6 +65,15 @@ const test: AppRouteModule = {
             title: '测试页面2-3', // 页面标题
             icon: 'fxemoji:snowmanwithoutsnow',
           },
+        },
+              {
+          path: 'test2-4', // 完整路径为/test/test2/test2-2
+          name: 'TestPage2-4', // 路由名称，需唯一
+          component: () => import('@/views/demo/test/test24.vue'),
+          meta: {
+            title: '测试页面2-4', // 页面标题
+            icon: 'fxemoji:snowmanwithoutsnow',
+          },
         }
       ],
     },

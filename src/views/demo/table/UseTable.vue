@@ -44,6 +44,7 @@
       getSelectRowKeys,
       setSelectedRowKeys,
       clearSelectedRowKeys,
+      
     },
   ] = useTable({
     canResize: true,
@@ -79,7 +80,7 @@
       rowSelection: {
         type: 'checkbox',
       },
-      showIndexColumn: true,
+      showIndexColumn: false,
     });
   }
   function reloadTable() {
@@ -115,9 +116,14 @@
   }
 
   function setPaginationInfo() {
-    setPagination({
-      current: 2,
-    });
+    // setPagination({
+    //   current: 2,
+    // });
+    setProps({
+      pagination: {
+        current: 2,
+      },
+    })
     reload();
   }
   function getSelectRowList() {
@@ -129,7 +135,7 @@
     console.log(getSelectRowKeys());
   }
   function setSelectedRowKeyList() {
-    setSelectedRowKeys(['0', '1', '2']);
+    setSelectedRowKeys(['0', '1', '5']);
   }
   function clearSelect() {
     clearSelectedRowKeys();
