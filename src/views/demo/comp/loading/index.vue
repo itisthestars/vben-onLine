@@ -51,7 +51,7 @@
     tip: '加载中...',
   });
   const [openFullLoading, closeFullLoading] = useLoading({
-    tip: '加载中...',
+    tip: '加载中111...',
   });
 
   const [openWrapLoading, closeWrapLoading] = useLoading({

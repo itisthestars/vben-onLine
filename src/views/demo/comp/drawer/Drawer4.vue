@@ -36,11 +36,15 @@
       span: 24,
     },
   });
-  const [register] = useDrawerInner((data) => {
+  const [register,{setDrawerProps}] = useDrawerInner((data) => {
     // 方式1
     setFieldsValue({
       field2: data.data,
       field1: data.info,
+    });
+    setDrawerProps({
+      title: 'New Title',
+      loading:true
     });
   });
 </script>

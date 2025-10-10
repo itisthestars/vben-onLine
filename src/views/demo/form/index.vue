@@ -785,6 +785,7 @@ const handleFieldValueChange=(params: Recordable) => {
     {
       field: 'field20',
       component: 'InputNumber',
+      
       label: '字段20',
       required: true,
       colProps: {

@@ -63,10 +63,36 @@
   const schemas: FormSchema[] = [
     {
       field: 'field111',
-      component: 'Input',
+      component: 'InputNumber',
       label: '字段11111',
+      // required: true,
       colProps: { span: 12 },
+      rules: [
+        {
+          required: true,
+          // message: '请输',
+          validator(rule, value) {
+            if (!value) {
+              return Promise.reject('请输入数字');
+            } else if (value < 100) {
+              return Promise.reject('请输入大于99的数字');
+            } else {
+              return Promise.resolve();
+            }
+          },
+        },
+      ],
       componentProps: {
+        formatter: (value) => {
+          if (!value) return ''; // 处理空值，避免报错
+          const num = Number(value);
+          return isNaN(num) ? '' : `$ ${num.toLocaleString()}`; // 用 toLocaleString() 简化千分位
+        },
+        // 优化：解析为纯数字字符串
+        parser: (value) => {
+          if (!value) return '';
+          return value.replace(/\$\s?|,/g, ''); // 移除 "$"、空格和逗号
+        },
         placeholder: '自定义placeho111lder',
         onChange: (e: any) => {
           console.log(e);
@@ -500,6 +526,6 @@
   };
 
   function handleSubmit(values) {
-    console.log(values);
+    console.log('submit', values);
   }
 </script>

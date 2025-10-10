@@ -4,9 +4,9 @@
     <a-button type="primary" class="my-4" @click="openDrawerLoading"> 打开Drawer </a-button>
 
     <Alert message="内外同时控制显示隐藏" show-icon />
-    <a-button type="primary" class="my-4" @click="openDrawer2(true)"> 打开Drawer </a-button>
+    <a-button type="primary" class="my-4" @click="openDrawerLoading2"> 打开Drawer </a-button>
     <Alert message="自适应高度/显示footer" show-icon />
-    <a-button type="primary" class="my-4" @click="openDrawer3(true)"> 打开Drawer </a-button>
+    <a-button type="primary" class="my-4" @click="openDrawerLoading3"> 打开Drawer </a-button>
 
     <Alert message="内外数据交互" show-icon />
     <a-button type="primary" class="my-4" @click="send"> 打开Drawer并传递数据 </a-button>
@@ -29,22 +29,40 @@
   import Drawer5 from './Drawer5.vue';
   import { PageWrapper } from '@/components/Page';
 
-  const [register1, { openDrawer: openDrawer1, setDrawerProps }] = useDrawer();
+  const [register1, { openDrawer: openDrawer1 }] = useDrawer();
   const [register2, { openDrawer: openDrawer2 }] = useDrawer();
-  const [register3, { openDrawer: openDrawer3 }] = useDrawer();
-  const [register4, { openDrawer: openDrawer4 }] = useDrawer();
+  const [register3, { openDrawer: openDrawer3,setDrawerProps:setDrawerProps3 }] = useDrawer();
+  const [register4, { openDrawer: openDrawer4, setDrawerProps:setDrawerProps4 }] = useDrawer();
   const [register5, { openDrawer: openDrawer5 }] = useDrawer();
   function send() {
+    // setDrawerProps({ loading: true,loadingText:'加载中...',title:'自定义标题' });
     openDrawer4(true, {
       data: 'content',
       info: 'Info',
     });
+    // setTimeout(() => {
+    //   setDrawerProps({ loading: false });
+    // }, 2000);
   }
   function openDrawerLoading() {
+    //   setDrawerProps({ loading: true });
     openDrawer1();
-    setDrawerProps({ loading: true });
-    setTimeout(() => {
-      setDrawerProps({ loading: false });
-    }, 2000);
+    // setTimeout(() => {
+    //   setDrawerProps({ loading: false });
+    // }, 2000);
   }
+  const openDrawerLoading2 = () => {
+    // setDrawerProps({ loading: true });
+    openDrawer2();
+    // setTimeout(() => {
+    //   setDrawerProps({ loading: false });
+    // }, 2000);
+  };
+    const openDrawerLoading3 = () => {
+    setDrawerProps3({ loading: true ,confirmLoading:true});
+    openDrawer3();
+    setTimeout(() => {
+      setDrawerProps3({ loading: false,confirmLoading:false });
+    }, 2000);
+  };
 </script>

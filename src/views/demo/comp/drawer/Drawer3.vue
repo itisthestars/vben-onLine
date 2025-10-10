@@ -18,8 +18,9 @@
   </BasicDrawer>
 </template>
 <script lang="ts" setup>
-  import { BasicDrawer } from '@/components/Drawer';
+  import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
 
+  // const [register, { setDrawerProps }] = useDrawerInner();
   function handleOk() {
     console.log('=====================');
     console.log('ok');
