@@ -19,13 +19,13 @@ const test: AppRouteModule = {
       name: 'TestPage1', // 路由名称，需唯一
       meta: {
         title: '测试页面1', // 页面标题
-         icon: 'fxemoji:grinwide',
+        icon: 'fxemoji:grinwide',
         // 不需要单独设置图标，会继承父级
       },
       // 引入测试页面1的组件
       component: () => import('@/views/demo/test/test1.vue'),
     },
-    
+
     // 测试页面2（包含子页面）
     {
       path: 'test2', // 完整路径为/test/test2
@@ -33,7 +33,7 @@ const test: AppRouteModule = {
       component: getParentLayout('TestPage2'), // 使用父级布局
       meta: {
         title: '测试页面2', // 页面标题
-            icon: 'fxemoji:sunflower',
+        icon: 'fxemoji:sunflower',
       },
       redirect: '/test/test2/test2-1', // 默认跳转的子路由
       children: [
@@ -43,7 +43,7 @@ const test: AppRouteModule = {
           name: 'TestPage2-1', // 路由名称，需唯一
           component: () => import('@/views/demo/test/test21.vue'),
           meta: {
-            title:'测试页面2-1', // 页面标题
+            title: '测试页面2-1', // 页面标题
             icon: 'fxemoji:spurtingwhale',
           },
         },
@@ -57,7 +57,7 @@ const test: AppRouteModule = {
             icon: 'fxemoji:snowmanwithoutsnow',
           },
         },
-            {
+        {
           path: 'test2-3', // 完整路径为/test/test2/test2-2
           name: 'TestPage2-3', // 路由名称，需唯一
           component: () => import('@/views/demo/test/test23.vue'),
@@ -66,7 +66,7 @@ const test: AppRouteModule = {
             icon: 'fxemoji:snowmanwithoutsnow',
           },
         },
-              {
+        {
           path: 'test2-4', // 完整路径为/test/test2/test2-2
           name: 'TestPage2-4', // 路由名称，需唯一
           component: () => import('@/views/demo/test/test24.vue'),
@@ -74,11 +74,19 @@ const test: AppRouteModule = {
             title: '测试页面2-4', // 页面标题
             icon: 'fxemoji:snowmanwithoutsnow',
           },
-        }
+        },
+        {
+          path: 'test2-5', // 完整路径为/test/test2/test2-2
+          name: 'TestPage2-5', // 路由名称，需唯一
+          component: () => import('@/views/demo/test/test25.vue'),
+          meta: {
+            title: '测试页面2-5-twailwindcss', // 页面标题
+            icon: 'fxemoji:snowmanwithoutsnow',
+          },
+        },
       ],
     },
   ],
 };
 
 export default test;
-    

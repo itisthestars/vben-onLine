@@ -66,7 +66,7 @@
       component: 'InputNumber',
       label: '字段11111',
       // required: true,
-      colProps: { span: 12 },
+      colProps: { span: 12, style: { marginBottom: '40px',border: '1px solid red' } },
       rules: [
         {
           required: true,
@@ -97,6 +97,9 @@
         onChange: (e: any) => {
           console.log(e);
         },
+        style:{
+          border:'1px solid green'
+        }
       },
     },
     {
@@ -322,7 +325,7 @@
       field: 'rowProps.gutter.1',
       component: 'InputNumber',
       defaultValue: 0,
-      label: 'Vertical Gutter',
+      label: 'Vertical Gutter11',
       colProps: { span: 24 },
       componentProps: {
         addonAfter: 'px',
@@ -487,6 +490,7 @@
   const [register, { setProps, setFieldsValue, updateSchema }] = useForm({
     labelWidth: 120,
     schemas,
+    rowProps: { gutter: [0, 50] },
     actionColOptions: { span: 24 },
     fieldMapToTime: [['fieldTime', ['startTime', 'endTime'], 'YYYY-MM']],
   });
