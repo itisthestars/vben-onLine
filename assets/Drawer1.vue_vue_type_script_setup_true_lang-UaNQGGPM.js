@@ -1,0 +1,1 @@
+import{B as a}from"./index-DgLM2KVx.js";import{d as t,a3 as s,V as o,u as n,a8 as i,a6 as p,G as m}from"./vue-CZYcLuVH.js";const w=t({__name:"Drawer1",setup(f){return(r,e)=>(o(),s(n(a),i(r.$attrs,{title:"Drawer Title",width:"50%"}),{default:p(()=>[...e[0]||(e[0]=[m(" Drawer Info. ",-1)])]),_:1},16))}});export{w as _};
