@@ -15,7 +15,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8 # 指定具体版本，避免兼容性问题
+          version: latest # 指定具体版本，避免兼容性问题
 
       # 2. 再设置 Node.js，并关联 pnpm 缓存
       - name: Setup Node.js
